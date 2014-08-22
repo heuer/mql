@@ -29,6 +29,7 @@ try {
         dependencies {
             buildproject 'jay:jay:1.1.1@jar'
         }
+        sourceSets { main {  java { srcDir 'src/grammar' } } }
     }
 } catch(ex) {}
 
@@ -37,5 +38,6 @@ try {
         dependencies {
             buildproject 'de.jflex:jflex:1.6.0'
         }
+        sourceSets { main {  java { srcDir 'src/grammar' } } }
     }
 } catch(ex) {}
