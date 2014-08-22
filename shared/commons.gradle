@@ -1,0 +1,75 @@
+/*
+ * Common configuration used by all MIO subprojects.
+ */
+apply plugin: 'java'
+apply plugin: 'osgi'
+apply plugin: 'maven'
+apply plugin: 'eclipse'
+
+//TODO: Remove me once <http://jira.codehaus.org/browse/GRADLE-1079> is fixed
+eclipseClasspath.variables = [:]
+
+defaultTasks 'clean', 'build'
+
+targetCompatibility = '1.5'
+
+project.vendorName = 'Semagia'
+project.vendorURL = 'http://www.semagia.com/'
+project.licenseName = 'Apache Software License, Version 2.0'
+project.licenseURL = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+project.projectURL = 'http://www.semagia.com/'
+
+jar {
+      manifest {
+        name = projectName
+        
+        attributes 'Implementation-Version': project.version, 
+                  'Implementation-Vendor': project.vendorName, 
+                  'Implementation-URL': project.projectURL, 
+                  'Sealed': 'false'
+                  
+        instruction 'Bundle-Vendor', project.vendorName
+        instruction 'Bundle-License', project.licenseURL
+        instruction 'Bundle-Description', project.projectDescription
+        instruction 'Export-Package', '!*.internal.*, *'
+      }
+}
+
+apply from: "$rootDir/shared/maven.gradle"
+apply from: "$rootDir/shared/dist.gradle"
+
+gradle.taskGraph.whenReady {taskGraph ->
+   if (!taskGraph.hasTask(':release')) {
+       version += '-SNAPSHOT'
+   }
+}
+
+configurations {
+    build {
+      extendsFrom compile
+    }
+}
+
+repositories {
+    mavenCentral()
+    mavenRepo urls: 'http://repository.semagia.com/thirdparty/'
+    mavenRepo urls: 'http://repository.semagia.com/snapshots/'
+}
+
+dependencies {
+    compile 'org.slf4j:slf4j-api:(1.5.8,)'
+    
+    testCompile 'junit:junit:4.8.1'
+
+    testRuntime 'org.slf4j:slf4j-jdk14:(1.5.8,)'
+}
+
+task copyAdditionalResources(type: Copy) {
+    from "$rootDir/shared/"
+    from "$projectDir"
+    into sourceSets.main.classesDir
+    include('LICENSE.txt')
+    include('NOTICE.txt')
+}
+
+processResources.dependsOn copyAdditionalResources

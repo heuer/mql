@@ -1,0 +1,41 @@
+/*
+ * Common configuration used by all MQL subprojects.
+ */
+apply plugin: 'java'
+
+apply from: "$rootDir/shared/commons.gradle"
+apply from: "$rootDir/shared/jay.gradle"
+apply from: "$rootDir/shared/jflex.gradle"
+
+configurations {
+    osgi
+}
+
+dependencies {
+    osgi 'org.osgi:org.osgi.core:4.0.1'
+    compile project(':mql-core')
+    // While we do not want to expose OSGi as a depedency, we need the lib for Eclipse in the classpath
+    testCompile 'org.osgi:org.osgi.core:4.0.1'
+}
+
+sourceSets {
+    main {
+      compileClasspath = sourceSets.main.compileClasspath + configurations.osgi
+    }
+}
+
+try {
+    if (project.jaySource != '') {
+        dependencies {
+            build 'jay:jay:1.1.1@jar'
+        }
+    }
+} catch(ex) {}
+
+try {
+    if (flexSource != '') {
+        dependencies {
+            build 'de.jflex:jflex:1.4.3'
+        }
+    }
+} catch(ex) {}

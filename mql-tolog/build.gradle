@@ -1,0 +1,24 @@
+/*
+ * Gradle build file.
+ * 
+ * - Download Gradle from <http://www.gradle.org/>
+ * - Execute gradle build
+ */
+version = '0.1.0'
+
+projectName = 'Semagia MQL tolog'
+projectDescription = 'Semagia MQL tolog' //TODO
+
+flexSource = 'RealTologLexer.flex'
+jaySource = 'RealTologParser.y'
+jayTarget = '/com/semagia/mql/tolog/RealTologParser.java'
+
+apply from: "$rootDir/shared/qlparser.gradle"
+
+dependencies {
+    compile 'com.semagia.mio:mio-core:0.9.6-SNAPSHOT',
+            'com.semagia.mio:mio-ctm:0.1.0-SNAPSHOT'
+}
+
+
+compileJava.dependsOn generateParser, generateLexer

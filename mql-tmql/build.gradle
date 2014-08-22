@@ -1,0 +1,22 @@
+/*
+ * Gradle build file.
+ * 
+ * - Download Gradle from <http://www.gradle.org/>
+ * - Execute gradle build
+ */
+version = '0.1.0'
+
+projectName = 'Semagia MQL TMQL'
+projectDescription = 'Semagia MQL TMQL' //TODO
+
+flexSource = 'RealTMQLLexer.flex'
+jaySource = 'RealTMQLParser.y'
+jayTarget = '/com/semagia/mql/tmql/RealTMQLParser.java'
+
+apply from: "$rootDir/shared/qlparser.gradle"
+
+dependencies {
+    compile 'com.semagia.mio:mio-core:0.9.6-SNAPSHOT'
+}
+
+compileJava.dependsOn generateParser, generateLexer

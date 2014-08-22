@@ -1,0 +1,17 @@
+/*
+ * Gradle build file.
+ * 
+ * - Download Gradle from <http://www.gradle.org/>
+ * - Execute gradle build
+ */
+version = '0.1.0'
+
+projectName = 'Semagia MQL Core'
+projectDescription = 'Semagia MQL Core' //TODO
+
+apply from: "$rootDir/shared/commons.gradle"
+
+dependencies {
+    compile 'com.semagia.mio:mio-core:0.9.6-SNAPSHOT'
+    testCompile 'xom:xom:1.2.5'
+}
