@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Lars Heuer (heuer[at]semagia.com)
+ * Copyright 2010 - 2014 Lars Heuer (heuer[at]semagia.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ import com.semagia.mql.MQLException;
  * SAX {@link ContentHandler}
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
- * @version $Rev: 566 $ - $Date: 2010-09-28 15:28:44 +0200 (Di, 28 Sep 2010) $
  */
 public abstract class AbstractSAXQueryHandler implements IQueryHandler {
 
@@ -36,6 +35,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
     
     protected final ContentHandler _handler;
     protected final AttributesImpl _attrs = new AttributesImpl();
+
+    private final String _namespace;
 
     protected AbstractSAXQueryHandler(final ContentHandler handler, final String namespace) {
         _handler = handler;

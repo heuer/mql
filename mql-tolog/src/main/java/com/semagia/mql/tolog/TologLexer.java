@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Lars Heuer (heuer[at]semagia.com)
+ * Copyright 2010 - 2014 Lars Heuer (heuer[at]semagia.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@ import com.semagia.mql.tolog.RealTologParser.yyInput;
  * This class is used to keep the (JFlex) lexer independent of the (Jay) parser.
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
- * @version $Rev: 495 $ - $Date: 2010-09-09 18:17:55 +0200 (Do, 09 Sep 2010) $
  */
 final class TologLexer extends RealTologLexer implements yyInput {
 

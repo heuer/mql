@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Lars Heuer (heuer[at]semagia.com)
+ * Copyright 2010 - 2014 Lars Heuer (heuer[at]semagia.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,16 +36,17 @@ import nu.xom.XPathContext;
  * Tests against the {@link AbstractSAXQueryHandler}.
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
- * @version $Rev: 567 $ - $Date: 2010-09-28 17:45:59 +0200 (Di, 28 Sep 2010) $
  */
 public class TestAbstractSAXQueryHandler extends TestCase {
 
+    private final String _NS = "http:/www.example.org/";
+    
     private ContentHandler _makeWriter(final OutputStream out) {
         return new SAXXMLWriter(out);
     }
 
     private IQueryHandler _makeQueryHandler(final OutputStream out) {
-        return new MockSAXQueryHandler(_makeWriter(out));
+        return new MockSAXQueryHandler(_makeWriter(out), _NS);
     }
 
     private Document _makeDocument(final ByteArrayOutputStream out) throws Exception {
@@ -53,7 +54,7 @@ public class TestAbstractSAXQueryHandler extends TestCase {
     }
 
     private Nodes _query(final Document doc, final String query) {
-        return doc.query(query, new XPathContext("mql", "http://psi.semagia.com/mql/"));
+        return doc.query(query, new XPathContext("mql", _NS));
     }
 
 
@@ -101,8 +102,8 @@ public class TestAbstractSAXQueryHandler extends TestCase {
 
     private static class MockSAXQueryHandler extends AbstractSAXQueryHandler {
 
-        public MockSAXQueryHandler(final ContentHandler handler) {
-            super(handler);
+        public MockSAXQueryHandler(final ContentHandler handler, final String ns) {
+            super(handler, ns);
         }
     }
 

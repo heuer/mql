@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Lars Heuer (heuer[at]semagia.com)
+ * Copyright 2010 - 2014 Lars Heuer (heuer[at]semagia.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import junit.framework.TestCase;
  * Tests against the {@link TologLexer}.
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
- * @version $Rev: 518 $ - $Date: 2010-09-12 00:29:27 +0200 (So, 12 Sep 2010) $
  */
 public class TestTologLexer extends TestCase {
 
@@ -164,6 +163,16 @@ public class TestTologLexer extends TestCase {
                 TokenTypes.VARIABLE,
                 TokenTypes.RPAREN,
                 TokenTypes.QM,
+                };
+        _lex(input, expected);
+    }
+
+    public void testQName() throws Exception {
+        final String input = "q:name another:qname legal:q2name.here";
+        final int[] expected = new int[] { 
+                TokenTypes.QNAME, 
+                TokenTypes.QNAME,
+                TokenTypes.QNAME,
                 };
         _lex(input, expected);
     }
