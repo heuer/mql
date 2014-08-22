@@ -88,8 +88,7 @@ IdentifierStart = [a-zA-Z_] | [\u00C0-\u00D6] | [\u00D8-\u00F6]
                             | [\u2070-\u218F] | [\u2C00-\u2FEF] 
                             | [\u3001-\uD7FF] | [\uF900-\uFDCF] 
                             | [\uFDF0-\uFFFD] | [\u10000-\uEFFFF]
-IdentifierChar  = {IdentifierStart} | [\-\.0-9] | \u00B7 | [\u0300-\u036F] 
-                                                | [\u203F-\u2040]
+IdentifierChar  = {IdentifierStart} | [\-\.0-9] | \u00B7 | [\u0300-\u036F] | [\u203F-\u2040]
 Identifier      = {IdentifierStart}{IdentifierChar}*
 Variable        = "$"{Identifier}
 Parameter       = "%"{Identifier}"%"
@@ -123,7 +122,7 @@ CTMString       = (\"([^\\\"]|(\\[\\\"rntuU]))*\")|\"{3} ~\"{3}
 
 <YYINITIAL> {
     // Directives
-    "%prefix"           { return _token(TokenTypes.DIR_PREFIX); }
+//    "%prefix"           { return _token(TokenTypes.DIR_PREFIX); }
 
     // Keywords
     "select"            { return _token(TokenTypes.KW_SELECT); }
