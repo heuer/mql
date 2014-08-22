@@ -25,7 +25,7 @@ sourceSets {
 }
 
 try {
-    if (project.jaySource != '') {
+    if (project.ext.jaySource != '') {
         dependencies {
             build 'jay:jay:1.1.1@jar'
         }
@@ -33,7 +33,7 @@ try {
 } catch(ex) {}
 
 try {
-    if (flexSource != '') {
+    if (project.ext.flexSource != '') {
         dependencies {
             build 'de.jflex:jflex:1.4.3'
         }
