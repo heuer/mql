@@ -6,12 +6,12 @@
  */
 version = '0.1.0'
 
-projectName = 'Semagia MQL tolog'
-projectDescription = 'Semagia MQL tolog' //TODO
+ext.projectName = 'Semagia MQL tolog'
+ext.projectDescription = 'Semagia MQL tolog' //TODO
 
-flexSource = 'RealTologLexer.flex'
-jaySource = 'RealTologParser.y'
-jayTarget = '/com/semagia/mql/tolog/RealTologParser.java'
+ext.flexSource = 'RealTologLexer.flex'
+ext.jaySource = 'RealTologParser.y'
+ext.jayTarget = '/com/semagia/mql/tolog/RealTologParser.java'
 
 apply from: "$rootDir/shared/qlparser.gradle"
 

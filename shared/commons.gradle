@@ -6,31 +6,29 @@ apply plugin: 'osgi'
 apply plugin: 'maven'
 apply plugin: 'eclipse'
 
-//TODO: Remove me once <http://jira.codehaus.org/browse/GRADLE-1079> is fixed
-eclipseClasspath.variables = [:]
 
-defaultTasks 'clean', 'build'
+defaultTasks 'clean', 'buildproject'
 
 targetCompatibility = '1.5'
 
-project.vendorName = 'Semagia'
-project.vendorURL = 'http://www.semagia.com/'
-project.licenseName = 'Apache Software License, Version 2.0'
-project.licenseURL = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-project.projectURL = 'http://www.semagia.com/'
+ext.vendorName = 'Semagia'
+ext.vendorURL = 'http://www.semagia.com/'
+ext.licenseName = 'Apache Software License, Version 2.0'
+ext.licenseURL = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+ext.projectURL = 'http://www.semagia.com/'
 
 jar {
       manifest {
-        name = projectName
+        name = project.ext.projectName
         
         attributes 'Implementation-Version': project.version, 
-                  'Implementation-Vendor': project.vendorName, 
-                  'Implementation-URL': project.projectURL, 
-                  'Sealed': 'false'
+                   'Implementation-Vendor': project.ext.vendorName, 
+                   'Implementation-URL': project.ext.projectURL, 
+                   'Sealed': 'false'
                   
-        instruction 'Bundle-Vendor', project.vendorName
-        instruction 'Bundle-License', project.licenseURL
-        instruction 'Bundle-Description', project.projectDescription
+        instruction 'Bundle-Vendor', project.ext.vendorName
+        instruction 'Bundle-License', project.ext.licenseURL
+        instruction 'Bundle-Description', project.ext.projectDescription
         instruction 'Export-Package', '!*.internal.*, *'
       }
 }
@@ -45,15 +43,15 @@ gradle.taskGraph.whenReady {taskGraph ->
 }
 
 configurations {
-    build {
+    buildproject {
       extendsFrom compile
     }
 }
 
 repositories {
     mavenCentral()
-    mavenRepo urls: 'http://repository.semagia.com/thirdparty/'
-    mavenRepo urls: 'http://repository.semagia.com/snapshots/'
+    maven { url 'http://repository.semagia.com/thirdparty/' }
+    maven { url 'http://repository.semagia.com/snapshots/' }
 }
 
 dependencies {
@@ -67,7 +65,7 @@ dependencies {
 task copyAdditionalResources(type: Copy) {
     from "$rootDir/shared/"
     from "$projectDir"
-    into sourceSets.main.classesDir
+    into sourceSets.main.output.classesDir
     include('LICENSE.txt')
     include('NOTICE.txt')
 }

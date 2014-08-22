@@ -6,8 +6,8 @@
  */
 version = '0.1.0'
 
-projectName = 'Semagia MQL Core'
-projectDescription = 'Semagia MQL Core' //TODO
+ext.projectName = 'Semagia MQL Core'
+ext.projectDescription = 'Semagia MQL Core' //TODO
 
 apply from: "$rootDir/shared/commons.gradle"
 

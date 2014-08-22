@@ -6,12 +6,12 @@
  */
 version = '0.1.0'
 
-projectName = 'Semagia MQL TMQL'
-projectDescription = 'Semagia MQL TMQL' //TODO
+ext.projectName = 'Semagia MQL TMQL'
+ext.projectDescription = 'Semagia MQL TMQL' //TODO
 
-flexSource = 'RealTMQLLexer.flex'
-jaySource = 'RealTMQLParser.y'
-jayTarget = '/com/semagia/mql/tmql/RealTMQLParser.java'
+ext.flexSource = 'RealTMQLLexer.flex'
+ext.jaySource = 'RealTMQLParser.y'
+ext.jayTarget = '/com/semagia/mql/tmql/RealTMQLParser.java'
 
 apply from: "$rootDir/shared/qlparser.gradle"
 
