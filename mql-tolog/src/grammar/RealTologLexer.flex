@@ -152,6 +152,9 @@ CTMString       = (\"([^\\\"]|(\\[\\\"rntuU]))*\")|\"{3} ~\"{3}
     {Variable}          { return _token(TokenTypes.VARIABLE, 1, 0); }
     {Parameter}         { return _token(TokenTypes.PARAM, 1, 1); }
 
+    {QName}             { return _token(TokenTypes.QNAME); }
+    {Identifier}        { return _token(TokenTypes.IDENT); }
+
     // Brackets
     "("                 { return _token(TokenTypes.LPAREN); }
     ")"                 { return _token(TokenTypes.RPAREN); }
@@ -184,8 +187,6 @@ CTMString       = (\"([^\\\"]|(\\[\\\"rntuU]))*\")|\"{3} ~\"{3}
     {Integer}           { return _token(TokenTypes.INTEGER); }
     {Decimal}           { return _token(TokenTypes.DECIMAL); }
 
-    {QName}             { return _token(TokenTypes.QNAME); }
-    {Identifier}        { return _token(TokenTypes.IDENT); }
 }
 
 <TM_CONTENT> {
