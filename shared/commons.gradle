@@ -9,8 +9,6 @@ apply plugin: 'eclipse'
 
 defaultTasks 'clean', 'buildproject'
 
-targetCompatibility = '1.5'
-
 ext.vendorName = 'Semagia'
 ext.vendorURL = 'http://www.semagia.com/'
 ext.licenseName = 'Apache Software License, Version 2.0'

@@ -3,7 +3,7 @@
  */
 task generateParser << {
     // Generate the parser from jay
-    ant.java(classpath: configurations.build.asPath,
+    ant.java(classpath: configurations.buildproject.asPath,
               classname: 'jay.Main',
               output: 'src/main/java/' + project.ext.jayTarget,
               error: 'yerror.log',

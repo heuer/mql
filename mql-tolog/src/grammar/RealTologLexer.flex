@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Lars Heuer (heuer[at]semagia.com)
+ * Copyright 2010 - 2014 Lars Heuer (heuer[at]semagia.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import com.semagia.mql.MQLParseException;
  * tolog tokenizer.
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
- * @version $Rev: 524 $ - $Date: 2010-09-14 00:11:42 +0200 (Di, 14 Sep 2010) $
  */
 @SuppressWarnings("unused")
 %%
@@ -88,8 +87,7 @@ IdentifierStart = [a-zA-Z_] | [\u00C0-\u00D6] | [\u00D8-\u00F6]
                             | [\u037F-\u1FFF] | [\u200C-\u200D] 
                             | [\u2070-\u218F] | [\u2C00-\u2FEF] 
                             | [\u3001-\uD7FF] | [\uF900-\uFDCF] 
-                            | [\uFDF0-\uFFFD] 
-                            //| [\u10000-\uEFFFF]
+                            | [\uFDF0-\uFFFD] | [\u10000-\uEFFFF]
 IdentifierChar  = {IdentifierStart} | [\-\.0-9] | \u00B7 | [\u0300-\u036F] 
                                                 | [\u203F-\u2040]
 Identifier      = {IdentifierStart}{IdentifierChar}*

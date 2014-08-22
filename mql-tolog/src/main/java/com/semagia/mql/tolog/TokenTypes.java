@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Lars Heuer (heuer[at]semagia.com)
+ * Copyright 2010 - 2014 Lars Heuer (heuer[at]semagia.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,12 @@ package com.semagia.mql.tolog;
  * tolog token types.
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
- * @version $Rev: 524 $ - $Date: 2010-09-14 00:11:42 +0200 (Di, 14 Sep 2010) $
  */
 final class TokenTypes {
 
     public static final int
         // Directives
-        DIR_PREFIX = TologParser.DIR_PREFIX,
+        //DIR_PREFIX = TologParser.DIR_PREFIX,
 
         // Keywords
         KW_SELECT = TologParser.KW_SELECT,
@@ -67,7 +66,7 @@ final class TokenTypes {
         COMMA = TologParser.COMMA,
         COLON = TologParser.COLON,
         DOT = TologParser.DOT,
-        CIRCUMFLEX = TologParser.CIRCUMFLEX,
+        //CIRCUMFLEX = TologParser.CIRCUMFLEX,
         DOUBLE_CIRCUMFLEX = TologParser.DOUBLE_CIRCUMFLEX,
         QM = TologParser.QM,
         IMPLIES = TologParser.IMPLIES,
@@ -105,7 +104,7 @@ final class TokenTypes {
     public static String name(final int type) {
         switch (type) {
             // Directives
-            case DIR_PREFIX:    return "%prefix";
+            //case DIR_PREFIX:    return "%prefix";
 
             // Keywords
             case KW_SELECT:     return "select";
@@ -147,7 +146,7 @@ final class TokenTypes {
             case COMMA:         return ",";
             case COLON:         return ":";
             case DOT:           return ".";
-            case CIRCUMFLEX:    return "^";
+            //case CIRCUMFLEX:    return "^";
             case DOUBLE_CIRCUMFLEX: return "^^";
             case QM:            return "?";
             case IMPLIES:       return ":-";
