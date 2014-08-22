@@ -87,7 +87,7 @@ IdentifierStart = [a-zA-Z_] | [\u00C0-\u00D6] | [\u00D8-\u00F6]
                             | [\u037F-\u1FFF] | [\u200C-\u200D] 
                             | [\u2070-\u218F] | [\u2C00-\u2FEF] 
                             | [\u3001-\uD7FF] | [\uF900-\uFDCF] 
-                            | [\uFDF0-\uFFFD] | [\u10000-\uEFFFF]
+                            | [\uFDF0-\uFFFD] | [\U10000-\UEFFFF]
 IdentifierChar  = {IdentifierStart} | [\-\.0-9] | \u00B7 | [\u0300-\u036F] | [\u203F-\u2040]
 Identifier      = {IdentifierStart}{IdentifierChar}*
 Variable        = "$"{Identifier}
@@ -145,8 +145,6 @@ CTMString       = (\"([^\\\"]|(\\[\\\"rntuU]))*\")|\"{3} ~\"{3}
     "merge"             { return _token(TokenTypes.KW_MERGE); }
     "update"            { return _token(TokenTypes.KW_UPDATE); }
 
-    {QName}             { return _token(TokenTypes.QNAME); }
-    {Identifier}        { return _token(TokenTypes.IDENT); }
     {SID}               { return _token(TokenTypes.SID, 2, 1); }
     {SLO}               { return _token(TokenTypes.SLO, 2, 1); }
     {IID}               { return _token(TokenTypes.IID, 2, 1); }
@@ -166,7 +164,7 @@ CTMString       = (\"([^\\\"]|(\\[\\\"rntuU]))*\")|\"{3} ~\"{3}
     ":-"                { return _token(TokenTypes.IMPLIES); }
     "|"                 { return _token(TokenTypes.PIPE); }
     "||"                { return _token(TokenTypes.PIPE_PIPE); }
-    "^"                 { return _token(TokenTypes.CIRCUMFLEX); }
+//    "^"                 { return _token(TokenTypes.CIRCUMFLEX); }
     "^^"                { return _token(TokenTypes.DOUBLE_CIRCUMFLEX); }
     "."                 { return _token(TokenTypes.DOT); }
     "?"                 { yybegin(IGNORE); return _token(TokenTypes.QM); }
@@ -185,6 +183,9 @@ CTMString       = (\"([^\\\"]|(\\[\\\"rntuU]))*\")|\"{3} ~\"{3}
     {DateTime}          { return _token(TokenTypes.DATE_TIME); }
     {Integer}           { return _token(TokenTypes.INTEGER); }
     {Decimal}           { return _token(TokenTypes.DECIMAL); }
+
+    {QName}             { return _token(TokenTypes.QNAME); }
+    {Identifier}        { return _token(TokenTypes.IDENT); }
 }
 
 <TM_CONTENT> {
@@ -199,7 +200,7 @@ CTMString       = (\"([^\\\"]|(\\[\\\"rntuU]))*\")|\"{3} ~\"{3}
     // This state is entered after matching the ? since
     //    select $t from topic($t)? Some content here which has nothing to do with tolog
     // is a valid query
-    .*                  { /* noop */ }
+    .*                  { yybegin(YYINITIAL); }
 }
 
 <COMMENT> {
