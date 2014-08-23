@@ -19,6 +19,7 @@ package com.semagia.mql.tolog;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.semagia.mio.IRef;
 import com.semagia.mql.MQLException;
 
 /**
@@ -72,7 +73,10 @@ class RealTologParser extends AbstractTologParser {
       TM_FRAGMENT
 
 %type <Tuple>
-      ref, uri_ref, SLO, SID, IID, qname, qiri, expr
+      ref, SLO, SID, IID, qname, qiri, expr
+
+%type <IRef>
+    uri_ref
 
 %type <List<Tuple>>
       arguments
@@ -95,7 +99,7 @@ directive   : using_directive
             ;
 
 using_directive 
-            : KW_USING IDENT KW_FOR uri_ref { _handler.registerPrefix($2, $4); }
+            : KW_USING IDENT KW_FOR uri_ref { _handler.namespace($2, $4.getIRI(), $4.getType()); }
             ;
 
 import_directive 
@@ -164,10 +168,10 @@ rule        : predclause IMPLIES            { _handler.startRule(_predicateRef.n
 
 clause      : predclause                    { 
                                                 final String name = _predicateRef.name;
-                                                if (super.isBuiltInPredicate(name)) {
+                                                if (super.isBuiltinPredicate(name)) {
                                                     _handler.startBuiltinPredicate(name);
                                                     
-                                                    _handler.endBuiltinPredicate(name);
+                                                    _handler.endBuiltinPredicate();
                                                 }
                                                 else {
                                               
@@ -176,7 +180,7 @@ clause      : predclause                    {
             | assoc_head opt_more_pairs RPAREN { _handler.endAssociationPredicate(); }
             ;
 
-assoc_head  : ref LPAREN expr COLON ref     { _handler.startAssociationPredicate($1); 
+assoc_head  : ref LPAREN expr COLON ref     { _handler.startAssociationPredicate(); 
                                               _handlePair(_handler, $3, $5); }
             ;
 
@@ -201,18 +205,21 @@ arguments   : expr                          { List<IExpression> args = new Array
             | arguments COMMA expr          { $1.add($3); $$=$1; }
             ;
 
-expr        : VARIABLE                      { }
-            | ref                           { $$=$1; }
-            | value                         { $$=$1; }
-            | parameter                     { }
+expr        : variable                      { $$ = $1; }
+            | ref                           { $$ = $1; }
+            | value                         { $$ = $1; }
+            | parameter                     { $$ = $1; }
             ;
 
-opclause    : expr EQ expr                  { _handler.compareEquals($1, $3); }
-            | expr NE expr                  { _handler.compareNotEquals($1, $3); }
-            | expr LE expr                  { _handler.compareLessThanOrEquals($1, $3); }
-            | expr LT expr                  { _handler.compareLessThan($1, $3); }
-            | expr GE expr                  { _handler.compareGreaterThanOrEquals($1, $3); }
-            | expr GT expr                  { _handler.compareGreaterThan($1, $3); }
+variable    : VARIABLE                      { }
+            ;
+
+opclause    : expr EQ expr                  { _handler.startInfixPredicate("eq"); _handler.endInfixPredicate(); }
+            | expr NE expr                  { _handler.startInfixPredicate("ne"); _handler.endInfixPredicate(); }
+            | expr LE expr                  { _handler.startInfixPredicate("le"); _handler.endInfixPredicate(); }
+            | expr LT expr                  { _handler.startInfixPredicate("lt"); _handler.endInfixPredicate(); }
+            | expr GE expr                  { _handler.startInfixPredicate("ge"); _handler.endInfixPredicate(); }
+            | expr GT expr                  { _handler.startInfixPredicate("gt"); _handler.endInfixPredicate(); }
             ;
 
 orclause    : LCURLY                        { _handler.startOr(); _handler.startBranch(false); }
@@ -324,8 +331,8 @@ delete      : KW_DELETE                     { _handler.startDelete(); }
             ;
 
 function_call   
-            : IDENT LPAREN                  { _handler.startFunction($1); }
-              paramlist RPAREN              { _handler.endFunction(); }
+            : IDENT LPAREN                  { _handler.startFunctionCall($1); }
+              paramlist RPAREN              { _handler.endFunctionCall(); }
             ;
 
 param       : string
