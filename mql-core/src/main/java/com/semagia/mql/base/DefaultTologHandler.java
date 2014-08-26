@@ -13,48 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.semagia.mql.base;
+package com.semagia.mql.tolog.helpers;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
-
-import com.semagia.mql.IQueryHandler;
 import com.semagia.mql.MQLException;
+import com.semagia.mql.tolog.ITologHandler;
 
 /**
- * Abstract {@link IQueryHandler} which reports all events to an underlying
- * SAX {@link ContentHandler}
+ * 
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
-public abstract class AbstractSAXQueryHandler implements IQueryHandler {
-
-    protected static final Attributes _EMPTY_ATTRS = new AttributesImpl();
-    
-    protected final ContentHandler _handler;
-    private final AttributesImpl _attrs = new AttributesImpl();
-
-    private final String _namespace;
-
-    protected AbstractSAXQueryHandler(final ContentHandler handler, final String namespace) {
-        _handler = handler;
-        _namespace = namespace;
-    }
+public class DefaultTologHandler implements ITologHandler {
 
     /* (non-Javadoc)
      * @see com.semagia.mql.IQueryHandler#start()
      */
     @Override
     public void start() throws MQLException {
-        try {
-            _handler.startDocument();
-        }
-        catch (SAXException ex) {
-            throw new MQLException(ex);
-        }
-        startElement("query", "xmlns", _namespace);
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -62,13 +39,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void end() throws MQLException {
-        endElement("query");
-        try {
-            _handler.endDocument();
-        }
-        catch (SAXException ex) {
-            throw new MQLException(ex);
-        }
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -76,7 +48,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void startSelect() throws MQLException {
-        startElement("select");
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -84,7 +57,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void endSelect() throws MQLException {
-        endElement("select");
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -92,7 +66,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void startInsert() throws MQLException {
-        startElement("insert");
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -100,7 +75,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void endInsert() throws MQLException {
-        endElement("insert");
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -108,7 +84,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void startUpdate() throws MQLException {
-        startElement("update");
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -116,7 +93,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void endUpdate() throws MQLException {
-        endElement("update");
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -124,7 +102,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void startDelete() throws MQLException {
-        startElement("delete");
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -132,7 +111,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void endDelete() throws MQLException {
-        endElement("delete");
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -140,7 +120,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void startPagination() throws MQLException {
-        startElement("pagination");
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -148,7 +129,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void endPagination() throws MQLException {
-        endElement("pagination");
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -156,7 +138,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void offset(int offset) throws MQLException {
-        emptyElement("offset", "value", offset);
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -164,7 +147,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void limit(int limit) throws MQLException {
-        emptyElement("limit", "value", limit);
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -172,7 +156,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void startOrderBy() throws MQLException {
-        startElement("order-by");
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -180,7 +165,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void endOrderBy() throws MQLException {
-        endElement("order-by");
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -188,9 +174,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void ascending(String variable) throws MQLException {
-        startElement("asc");
-        variable(variable);
-        endElement("asc");
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -198,9 +183,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void descending(String variable) throws MQLException {
-        startElement("desc");
-        variable(variable);
-        endElement("desc");
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -208,7 +192,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void startWhere() throws MQLException {
-        startElement("where");
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -216,7 +201,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void endWhere() throws MQLException {
-        endElement("where");
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -224,9 +210,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void count(String variable) throws MQLException {
-        startElement("count");
-        variable(variable);
-        endElement("count");
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -234,7 +219,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void startOr() throws MQLException {
-        startElement("or");
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -242,7 +228,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void endOr() throws MQLException {
-        endElement("or");
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -250,12 +237,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void startBranch(boolean shortcircuit) throws MQLException {
-        if (shortcircuit)   {
-            startElement("branch", "shortcircuit", "true");
-        }
-        else {
-            startElement("branch");
-        }
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -263,7 +246,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void endBranch() throws MQLException {
-        endElement("branch");
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -271,7 +255,8 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void startNot() throws MQLException {
-        startElement("not");
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -279,74 +264,126 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
      */
     @Override
     public void endNot() throws MQLException {
-        endElement("not");
+        // TODO Auto-generated method stub
+
     }
 
-    public void variable(String name) throws MQLException {
-        emptyElement("variable", "name", name);
+    /* (non-Javadoc)
+     * @see com.semagia.mql.tolog.ITologHandler#namespace(java.lang.String, java.lang.String, int)
+     */
+    @Override
+    public void namespace(String ident, String iri, int kind)
+            throws MQLException {
+        // TODO Auto-generated method stub
+
     }
 
-    protected final void characters(String value) throws MQLException {
-        try {
-            final char[] ch = value.toCharArray();
-            _handler.characters(ch, 0, ch.length);
-        }
-        catch (SAXException ex) {
-            throw new MQLException(ex);
-        }
+    /* (non-Javadoc)
+     * @see com.semagia.mql.tolog.ITologHandler#startFunction(java.lang.String)
+     */
+    @Override
+    public void startFunction(String name) throws MQLException {
+        // TODO Auto-generated method stub
+
     }
 
-    protected final void emptyElement(String name, String key, int value) throws MQLException {
-        emptyElement(name, key, Integer.toString(value));
+    /* (non-Javadoc)
+     * @see com.semagia.mql.tolog.ITologHandler#endFunction()
+     */
+    @Override
+    public void endFunction() throws MQLException {
+        // TODO Auto-generated method stub
+
     }
 
-    protected final void emptyElement(String name, String key, String value) throws MQLException {
-        emptyElement(name, new String[][]{{key, value}});
+    /* (non-Javadoc)
+     * @see com.semagia.mql.tolog.ITologHandler#startMerge()
+     */
+    @Override
+    public void startMerge() throws MQLException {
+        // TODO Auto-generated method stub
+
     }
 
-    private final void emptyElement(final String name, final String[][] attrs) throws MQLException {
-        startElement(name, attrs);
-        endElement(name);
+    /* (non-Javadoc)
+     * @see com.semagia.mql.tolog.ITologHandler#endMerge()
+     */
+    @Override
+    public void endMerge() throws MQLException {
+        // TODO Auto-generated method stub
+
     }
 
-    protected final void startElement(String name) throws MQLException {
-        startElement(name, _EMPTY_ATTRS);
+    /* (non-Javadoc)
+     * @see com.semagia.mql.tolog.ITologHandler#startAssociationPredicate()
+     */
+    @Override
+    public void startAssociationPredicate() throws MQLException {
+        // TODO Auto-generated method stub
+
     }
 
-    protected final void startElement(String name, String key, String value) throws MQLException {
-        startElement(name, new String[][]{{key, value}});
+    /* (non-Javadoc)
+     * @see com.semagia.mql.tolog.ITologHandler#endAssociationPredicate()
+     */
+    @Override
+    public void endAssociationPredicate() throws MQLException {
+        // TODO Auto-generated method stub
+
     }
 
-    protected final void startElement(String name, String[][] attrs) throws MQLException {
-        _attrs.clear();
-        for (int i=0; i < attrs.length; i++) {
-            _attrs.addAttribute("", attrs[i][0], "", "CDATA", attrs[i][1]);
-        }
-        startElement(name, _attrs);
+    /* (non-Javadoc)
+     * @see com.semagia.mql.tolog.ITologHandler#startBuiltinPredicate(java.lang.String)
+     */
+    @Override
+    public void startBuiltinPredicate(String name) throws MQLException {
+        // TODO Auto-generated method stub
+
     }
 
-    private final void startElement(String name, Attributes attrs) throws MQLException {
-        try {
-            _handler.startElement("", name, "", attrs);
-        }
-        catch (SAXException ex) {
-            throw new MQLException(ex);
-        }
+    /* (non-Javadoc)
+     * @see com.semagia.mql.tolog.ITologHandler#endBuiltinPredicate()
+     */
+    @Override
+    public void endBuiltinPredicate() throws MQLException {
+        // TODO Auto-generated method stub
+
     }
 
-    protected final void dataElement(String name, String content) throws MQLException {
-        startElement(name);
-        characters(content);
-        endElement(name);
+    /* (non-Javadoc)
+     * @see com.semagia.mql.tolog.ITologHandler#startRule(java.lang.String, java.lang.String[])
+     */
+    @Override
+    public void startRule(String name, String... variables) throws MQLException {
+        // TODO Auto-generated method stub
+
     }
 
-    protected final void endElement(String name) throws MQLException {
-        try {
-            _handler.endElement("", name, "");
-        }
-        catch (SAXException ex) {
-            throw new MQLException(ex);
-        }
+    /* (non-Javadoc)
+     * @see com.semagia.mql.tolog.ITologHandler#endRule()
+     */
+    @Override
+    public void endRule() throws MQLException {
+        // TODO Auto-generated method stub
+
+    }
+
+    /* (non-Javadoc)
+     * @see com.semagia.mql.tolog.ITologHandler#startInfixPredicate(java.lang.String)
+     */
+    @Override
+    public void startInfixPredicate(String name) throws MQLException {
+        // TODO Auto-generated method stub
+
+    }
+
+    /* (non-Javadoc)
+     * @see com.semagia.mql.tolog.ITologHandler#endInfixPredicate()
+     */
+    @Override
+    public void endInfixPredicate() throws MQLException {
+        // TODO Auto-generated method stub
+
     }
 
 }

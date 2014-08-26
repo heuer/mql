@@ -15,6 +15,10 @@
  */
 package com.semagia.mql.tolog;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.semagia.mql.MQLException;
 import com.semagia.mql.tolog.helpers.DefaultTologHandler;
 
 /**
@@ -26,10 +30,20 @@ abstract class AbstractTologParser {
 
     private static final ITologHandler _DEFAULT_HANDLER = new DefaultTologHandler();
 
+    private static final int 
+        _BINDING_KIND_MODULE = 1,
+        _BINDING_KIND_SID = 2,
+        _BINDING_KIND_SLO = 3,
+        _BINDING_KIND_IID = 4;
+
     protected ITologHandler _handler;
+    protected final PredicateClause _predClause;
+    private final Map<String, PrefixBinding> _prefixes;
 
     protected AbstractTologParser() {
         setHandler(_DEFAULT_HANDLER);
+        _predClause = new PredicateClause();
+        _prefixes = new HashMap<String, PrefixBinding>();
     }
 
     public ITologHandler getHandler() {
@@ -40,9 +54,103 @@ abstract class AbstractTologParser {
         _handler = handler;
     }
 
-    
     protected static boolean isBuiltinPredicate(final String name) {
         return TologUtils.isBuiltinPredicate(name);
+    }
+
+    private boolean _isRule(String name) {
+        return false;
+    }
+
+    protected final void handleRuleStart() throws MQLException {
+        String[] variables = new String[_predClause.arguments.length];
+        for (int i=0; i<variables.length; i++) {
+            if (_predClause.arguments[i].getType() != TologReference.VARIABLE) {
+                throw new MQLException(""); // TODO
+            }
+            variables[i] = _predClause.arguments[i].getValue();
+        }
+        _handler.startRule(_predClause.ref.getValue(), variables);
+    }
+
+    protected final void handlePredicateClause() throws MQLException {
+        final TologReference ref = _predClause.ref;
+        final int kind = ref.getType();
+        final String name = ref.getValue();
+        final boolean isIdent = kind == TologReference.IDENT;
+        boolean handled = false;
+        if (isIdent && isBuiltinPredicate(name)) {
+            _handler.startBuiltinPredicate(name);
+            issueArgumentEvents();
+            _handler.endBuiltinPredicate();
+            handled = true;
+        }
+        else {
+            if (isIdent && _predClause.arguments.length == 2 && !_isRule(name)) {
+                _handler.startDynamicPredicate();
+                _issueNameEvent();
+                issueArgumentEvents();
+                _handler.endDynamicPredicate();
+                handled = true;
+            }
+            else if (kind == TologReference.QNAME){
+                final PrefixBinding binding = _prefixes.get(name);
+                if (binding == null) {
+                    throw new MQLException("Unknown prefix '" + name + "'");
+                }
+                if (binding.kind != _BINDING_KIND_MODULE) {
+                    _handler.startDynamicPredicate();
+                    _issueNameEvent();
+                    issueArgumentEvents();
+                    _handler.endDynamicPredicate();
+                    handled = true;
+                }
+            }
+        }
+        if (!handled) {
+            _handler.startPredicate();
+            _issueNameEvent();
+            issueArgumentEvents();
+            _handler.endPredicate();
+        }
+    }
+
+    private void issueArgumentEvents() throws MQLException {
+        for (int i=0; i<_predClause.arguments.length; i++) {
+            
+        }
+        
+    }
+
+    protected final void _issueNameEvent() throws MQLException {
+        _handler.startName();
+        issueEvent(_predClause.ref);
+        _handler.endName();
+    }
+
+    protected final void issueEvent(TologReference ref) throws MQLException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    protected void registerNamespace(String ident, String iri, int kind) throws MQLException {
+        //TODO: Check if exists
+        _prefixes.put(ident, new PrefixBinding(iri, kind));
+        _handler.namespace(ident, iri, kind);
+    }
+
+    protected final static class PredicateClause {
+        public TologReference ref;
+        public TologReference[] arguments;
+    }
+
+    private static class PrefixBinding {
+        public String iri;
+        public int kind;
+        PrefixBinding(String iri, int kind) {
+            this.iri = iri;
+            this.kind = kind;
+        }
     }
 
     protected static final class Tuple {
@@ -67,4 +175,5 @@ abstract class AbstractTologParser {
             this.value = value;
         }
     }
+
 }

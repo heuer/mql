@@ -20,7 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.semagia.mio.IRef;
+import com.semagia.mio.ctm.CTMUtils;
 import com.semagia.mql.MQLException;
+import com.semagia.mql.tolog.TologReference;
 
 /**
  * This tolog parser utilizes the AbstractTologParser and is responsible for 
@@ -44,42 +46,40 @@ class RealTologParser extends AbstractTologParser {
 %}
 
 %token
-  KW_USING, KW_FOR, 
-  KW_IMPORT, KW_AS
-  KW_SELECT, KW_FROM,
-  KW_COUNT, KW_ORDER, KW_BY, KW_ASC, KW_DESC,
-  KW_LIMIT, KW_OFFSET, 
-  KW_NOT,
-  KW_DELETE, KW_INSERT, KW_MERGE, KW_UPDATE,
-  
-  IDENT, QNAME, VARIABLE, PARAM, SID, SLO, IID, OID,
-  
-  EQ, NE, LT, GT, LE, GE,
+    KW_USING, KW_FOR, 
+    KW_IMPORT, KW_AS
+    KW_SELECT, KW_FROM,
+    KW_COUNT, KW_ORDER, KW_BY, KW_ASC, KW_DESC,
+    KW_LIMIT, KW_OFFSET, 
+    KW_NOT,
+    KW_DELETE, KW_INSERT, KW_MERGE, KW_UPDATE,
 
-  LPAREN, RPAREN, LCURLY, RCURLY,
-  
-  COMMA, COLON, QM, PIPE, PIPE_PIPE, DOUBLE_CIRCUMFLEX,
-  IMPLIES, DOT,
-  
-  STRING, DATE, DATE_TIME, INTEGER, DECIMAL, IRI,
-  
-  TM_FRAGMENT,
+    IDENT, QNAME, VARIABLE, PARAM, SID, SLO, IID, OID,
+
+    EQ, NE, LT, GT, LE, GE,
+
+    LPAREN, RPAREN, LCURLY, RCURLY,
+
+    COMMA, COLON, QM, PIPE, PIPE_PIPE, DOUBLE_CIRCUMFLEX,
+    IMPLIES, DOT,
+
+    STRING, DATE, DATE_TIME, INTEGER, DECIMAL, IRI,
+
+    TM_FRAGMENT,
 
 %token<String>
-      IDENT
-      INTEGER
-      STRING
-      VARIABLE
-      TM_FRAGMENT
+    IDENT
+    INTEGER
+    STRING
+    VARIABLE
+    TM_FRAGMENT
 
-%type <Tuple>
-      ref, SLO, SID, IID, qname, qiri, expr
+%type <TologReference>
+    ref, SLO, SID, IID, qname, qiri, expr,
+    uri_ref, variable, value, parameter
 
-%type <IRef>
-    uri_ref
-
-%type <List<Tuple>>
-      arguments
+%type <List<TopicReference>>
+    arguments
 
 %%
 
@@ -99,7 +99,7 @@ directive   : using_directive
             ;
 
 using_directive 
-            : KW_USING IDENT KW_FOR uri_ref { _handler.namespace($2, $4.getIRI(), $4.getType()); }
+            : KW_USING IDENT KW_FOR uri_ref { super.registerNamespace($2, $4.getIRI(), $4.getType()); }
             ;
 
 import_directive 
@@ -162,21 +162,11 @@ limit_offset
 opt_offset  : KW_OFFSET INTEGER             { _handler.offset(Integer.parseInt($2)); }
             ;
 
-rule        : predclause IMPLIES            { _handler.startRule(_predicateRef.name); }
+rule        : predclause IMPLIES            { super.handleRuleStart(); }
               clauselist DOT                { _handler.endRule(); }
             ;
 
-clause      : predclause                    { 
-                                                final String name = _predicateRef.name;
-                                                if (super.isBuiltinPredicate(name)) {
-                                                    _handler.startBuiltinPredicate(name);
-                                                    
-                                                    _handler.endBuiltinPredicate();
-                                                }
-                                                else {
-                                              
-                                                }
-                                            }
+clause      : predclause                    { super.handlePredicateClause(); }
             | assoc_head opt_more_pairs RPAREN { _handler.endAssociationPredicate(); }
             ;
 
@@ -184,7 +174,7 @@ assoc_head  : ref LPAREN expr COLON ref     { _handler.startAssociationPredicate
                                               _handlePair(_handler, $3, $5); }
             ;
 
-predclause  : ref LPAREN arguments RPAREN   { _predicateRef = $1; _predicateArgs = $3.toArray(new Tuple[0]); }
+predclause  : ref LPAREN arguments RPAREN   { _predClause.ref = $1; _predClause.arguments = $3.toArray(new Tuple[0]); }
             ;
 
 opt_more_pairs  
@@ -199,10 +189,9 @@ pairs       : pair
 pair        : expr COLON ref                { _handlePair(_handler, $1, $3); }
             ;
 
-arguments   : expr                          { List<IExpression> args = new ArrayList<IExpression>(); 
-                                              args.add($1); 
-                                              $$=args; }
-            | arguments COMMA expr          { $1.add($3); $$=$1; }
+arguments   : expr                          { List<TologReference> args = new ArrayList<TologReference>(); 
+                                              args.add($1); $$ = args; }
+            | arguments COMMA expr          { $1.add($3); $$ = $1; }
             ;
 
 expr        : variable                      { $$ = $1; }
@@ -211,7 +200,7 @@ expr        : variable                      { $$ = $1; }
             | parameter                     { $$ = $1; }
             ;
 
-variable    : VARIABLE                      { }
+variable    : VARIABLE                      { $$ = TologReference.createVariable($1); }
             ;
 
 opclause    : expr EQ expr                  { _handler.startInfixPredicate("eq"); _handler.endInfixPredicate(); }
@@ -259,7 +248,7 @@ value       : STRING DOUBLE_CIRCUMFLEX datatype
             | DATE_TIME
             ;
 
-string      : STRING                        { _handler.string($1); }
+string      : STRING                        { TologReference.createString($1); }
             ;
 
 datatype    : STRING                        { }
@@ -272,7 +261,7 @@ ref         : uri_ref                       { $$=$1; }
             | OID                           { }
             ;
 
-uri_ref     : SID                           { }
+uri_ref     : SID                           {  }
             | SLO                           { }
             | IID                           { }
             | qiri                          { $$=$1; }
@@ -326,7 +315,7 @@ opt_limit_offset
             | limit_offset
             ;
 
-delete      : KW_DELETE                     { _handler.startDelete(); }
+delete      : KW_DELETE                      { _handler.startDelete(); }
               delete_element opt_from_clause { _handler.endDelete(); }
             ;
 
@@ -335,13 +324,19 @@ function_call
               paramlist RPAREN              { _handler.endFunctionCall(); }
             ;
 
-param       : string
-            | variable
-            | ref                           { _handler.topicRef($1); }
+param       : string                        { $$ = $1; }
+            | variable                      { $$ = $1; }
+            | ref                           { $$ = $1; }
             ;
 
 insert      : KW_INSERT                     { _handler.startInsert(); } 
-              TM_FRAGMENT                   { _handler.fragment($3); } 
+              TM_FRAGMENT                   { _handler.startFragment(); 
+                                              final String content = $3;
+                                              for (String var: CTMUtils.findVariables(content, true)) {
+                                                  _handler.variable(var);
+                                              }
+                                              _handler.fragmentContent(content);
+                                              _handler.endFragment(); } 
               opt_from_clause               { _handler.endInsert(); }
             ;
 
@@ -354,8 +349,8 @@ merge       : KW_MERGE                      { _handler.startMerge(); }
               opt_from_clause               { _handler.endMerge(); }
             ;
 
-literal     : variable
-            | ref                           { _handler.topicRef($1); }
+literal     : variable                      { $$ = $1; }
+            | ref                           { $$ = $1; }
             ;
 
 from_clause : KW_FROM                       { _handler.startWhere(); } 
