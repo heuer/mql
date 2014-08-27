@@ -16,7 +16,7 @@
 package com.semagia.mql.tolog;
 
 /**
- * 
+ * Utility functions to determine built-in predicates etc.
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
@@ -62,7 +62,8 @@ final class TologUtils {
                 || "variant".equals(name)
                 // tolog 1.2
                 || "coalesce".equals(name) 
-                // didn't make it into 1.2, c.f. experimental module: || "name".equals(name)
+                // didn't make it into 1.2, c.f. experimental module
+                // || "name".equals(name)
                 // deprecated
                 || "source-locator".equals(name)
                 ;
@@ -146,8 +147,7 @@ final class TologUtils {
      *          otherwise {@code false}.
      */
     private static boolean _isUpdateFunction(final String name) {
-        return "value".equals(name) 
-                || "resource".equals(name);
+        return "value".equals(name) || "resource".equals(name);
     }
 
     /**
