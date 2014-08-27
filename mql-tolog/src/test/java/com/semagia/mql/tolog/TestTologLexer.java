@@ -75,6 +75,14 @@ public class TestTologLexer extends TestCase {
         _lex(input, expected);
     }
 
+    public void testStringEscape() throws Exception {
+        final String input = " \"Se\"\"magia\" ";
+        TologLexer lexer = _lexer(input);
+        lexer.advance();
+        assertEquals(TokenTypes.STRING, lexer.token());
+        assertEquals("Se\"magia", lexer.value());
+    }
+
     public void testInsert() throws Exception {
         final String input = "INSERT from-hell - \"I am from hell\".";
         final int[] expected = new int[] { 

@@ -78,7 +78,8 @@ final class TologLexer extends RealTologLexer implements yyInput {
      */
     @Override
     public String value() {
-        return super.value();
+        //TODO: Should we replace the stuffing here?!?
+        return _current == TokenTypes.STRING ? super.value().replace("\"\"", "\"") : super.value();
     }
 
     /* (non-Javadoc)
