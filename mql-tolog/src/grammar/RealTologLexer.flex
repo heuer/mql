@@ -48,7 +48,7 @@ import com.semagia.mql.MQLParseException;
 
     private int _commentCount;
     private StringBuffer _content = new StringBuffer();
-    private boolean _wantContent;
+    private boolean _returnFragment;
     private int _leftOffset;
     private int _rightOffset;
 
@@ -61,8 +61,8 @@ import com.semagia.mql.MQLParseException;
     }
 
     public String value() {
-        if (_wantContent) {
-            _wantContent = false;
+        if (_returnFragment) {
+            _returnFragment = false;
             return _content.toString();
         }
         return new String(zzBuffer, zzStartRead+_leftOffset, yylength()-_leftOffset-_rightOffset);
@@ -95,9 +95,9 @@ Parameter       = "%"{Identifier}"%"
 QName           = {Identifier}":"([0-9]|{IdentifierStart}){IdentifierChar}*
 
 URI             = \"[^\"]+\"
-SID             = i{URI} | i{IRI}
-IID             = s{URI} | s{IRI}
-SLO             = a{URI} | a{IRI}
+SID             = i{URI}
+IID             = s{URI}
+SLO             = a{URI}
 OID             = @{Identifier}
 
 String          = \"([^\"]|\"\")*\"
@@ -140,7 +140,7 @@ CTMString       = (\"([^\\\"]|(\\[\\\"rntuU]))*\")|\"{3} ~\"{3}
     "using"             { return _token(TokenTypes.KW_USING); }
     "for"               { return _token(TokenTypes.KW_FOR); }
     // tolog 1.2
-    "insert"            { yybegin(TM_CONTENT); _wantContent=false; _content.setLength(0); return _token(TokenTypes.KW_INSERT); }
+    "insert"            { yybegin(TM_CONTENT); _returnFragment=false; _content.setLength(0); return _token(TokenTypes.KW_INSERT); }
     "delete"            { return _token(TokenTypes.KW_DELETE); }
     "merge"             { return _token(TokenTypes.KW_MERGE); }
     "update"            { return _token(TokenTypes.KW_UPDATE); }
@@ -191,10 +191,10 @@ CTMString       = (\"([^\\\"]|(\\[\\\"rntuU]))*\")|\"{3} ~\"{3}
 
 <TM_CONTENT> {
     {CTMComment}        { _content.append(value()); }
-    [\r\n\t\f ]"from"[\r\n\t\f ] { yybegin(YYINITIAL); yypushback(6); _wantContent=true; return _token(TokenTypes.TM_FRAGMENT); }
+    [\r\n\t\f ]"from"[\r\n\t\f ] { yybegin(YYINITIAL); yypushback(6); _returnFragment=true; return _token(TokenTypes.TM_FRAGMENT); }
     {CTMString}         { _content.append(value()); }
     [^]                 { _content.append(yycharat(yylength()-1)); }
-    <<EOF>>             { _wantContent=true; return _token(TM_FRAGMENT_EOF); }
+    <<EOF>>             { _returnFragment=true; return _token(TM_FRAGMENT_EOF); }
 }
 
 <IGNORE> {
