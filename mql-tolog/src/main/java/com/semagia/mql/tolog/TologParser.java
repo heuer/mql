@@ -21,19 +21,37 @@ import java.io.Reader;
 import com.semagia.mql.MQLException;
 
 /**
- * 
+ * This class is the main entry point for parsing tolog.
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
 final class TologParser extends RealTologParser {
 
+    /**
+     * Parses a tolog query using the provided {@code reader}.
+     * 
+     * @param reader The reader to utilize.
+     * @throws IOException In case of an IO error.
+     * @throws MQLException In case of a parsing error.
+     * @see #parse(TologLexer)
+     */
     public void parse(final Reader reader) throws IOException, MQLException {
-        yyInput lexer = new TologLexer(reader);
+        parse(new TologLexer(reader));
+    }
+
+    /**
+     * Parses a tolog query using the provided {@code lexer}.
+     * 
+     * @param lexer
+     * @throws IOException In case of an IO error.
+     * @throws MQLException In case of a parsing error.
+     */
+    public void parse(final TologLexer lexer) throws IOException, MQLException {
         try {
             yyparse(lexer);
         }
         catch (yyException ex) {
-            throw new MQLException(ex.getMessage());
+            throw new MQLException(ex.getMessage(), ex);
         }
     }
 
