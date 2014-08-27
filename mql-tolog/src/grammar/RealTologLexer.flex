@@ -79,8 +79,7 @@ import com.semagia.mql.MQLParseException;
     }
 %}
 
-LineTerminator  = \r|\n|\r\n
-Whitespace      = {LineTerminator} | [ \t\f]
+Whitespace      = \s+
 
 IdentifierStart = [a-zA-Z_] | [\u00C0-\u00D6] | [\u00D8-\u00F6] 
                             | [\u00F8-\u02FF] | [\u0370-\u037D] 
@@ -140,7 +139,7 @@ CTMString       = (\"([^\\\"]|(\\[\\\"rntuU]))*\")|\"{3} ~\"{3}
     "using"             { return _token(TokenTypes.KW_USING); }
     "for"               { return _token(TokenTypes.KW_FOR); }
     // tolog 1.2
-    "insert"            { yybegin(TM_CONTENT); _returnFragment=false; _content.setLength(0); return _token(TokenTypes.KW_INSERT); }
+    "insert"            { yybegin(TM_CONTENT); _content.setLength(0); return _token(TokenTypes.KW_INSERT); }
     "delete"            { return _token(TokenTypes.KW_DELETE); }
     "merge"             { return _token(TokenTypes.KW_MERGE); }
     "update"            { return _token(TokenTypes.KW_UPDATE); }
@@ -168,7 +167,7 @@ CTMString       = (\"([^\\\"]|(\\[\\\"rntuU]))*\")|\"{3} ~\"{3}
     "|"                 { return _token(TokenTypes.PIPE); }
     "||"                { return _token(TokenTypes.PIPE_PIPE); }
 //    "^"                 { return _token(TokenTypes.CIRCUMFLEX); }
-    "^^"                { return _token(TokenTypes.DOUBLE_CIRCUMFLEX); }
+//    "^^"                { return _token(TokenTypes.DOUBLE_CIRCUMFLEX); }
     "."                 { return _token(TokenTypes.DOT); }
     "?"                 { yybegin(IGNORE); return _token(TokenTypes.QM); }
     
@@ -191,7 +190,7 @@ CTMString       = (\"([^\\\"]|(\\[\\\"rntuU]))*\")|\"{3} ~\"{3}
 
 <TM_CONTENT> {
     {CTMComment}        { _content.append(value()); }
-    [\r\n\t\f ]"from"[\r\n\t\f ] { yybegin(YYINITIAL); yypushback(6); _returnFragment=true; return _token(TokenTypes.TM_FRAGMENT); }
+    \s"from"\s          { yybegin(YYINITIAL); yypushback(6); _returnFragment=true; return _token(TokenTypes.TM_FRAGMENT); }
     {CTMString}         { _content.append(value()); }
     [^]                 { _content.append(yycharat(yylength()-1)); }
     <<EOF>>             { _returnFragment=true; return _token(TM_FRAGMENT_EOF); }
@@ -201,13 +200,13 @@ CTMString       = (\"([^\\\"]|(\\[\\\"rntuU]))*\")|\"{3} ~\"{3}
     // This state is entered after matching the ? since
     //    select $t from topic($t)? Some content here which has nothing to do with tolog
     // is a valid query
-    .*                  { yybegin(YYINITIAL); }
+    [^]*                { yybegin(YYINITIAL); }
 }
 
 <COMMENT> {
     "/*"                { _commentCount++; }
     "*/"                { _commentCount--; if (_commentCount == 0) { yybegin(YYINITIAL); } }
-    [^]                 { /* noop */ }
+    [^]+                { /* noop */ }
 }
 
 .|\n                    { throw new MQLParseException("Illegal character <" + yytext() + "> at line " + getLine() + " column: " + getColumn(), getLine(), getColumn()); }
