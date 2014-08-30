@@ -84,4 +84,12 @@ public interface ITologHandler extends IQueryHandler {
 
     void endPair() throws MQLException;
 
+    void startType() throws MQLException;
+    
+    void endType() throws MQLException;
+
+    void startPlayer() throws MQLException;
+
+    void endPlayer() throws MQLException;
+
 }

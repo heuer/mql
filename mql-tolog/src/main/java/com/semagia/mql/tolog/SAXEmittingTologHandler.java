@@ -171,4 +171,24 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
         super.endElement("pair");
     }
 
+    @Override
+    public void startType() throws MQLException {
+        super.startElement("type");
+    }
+
+    @Override
+    public void endType() throws MQLException {
+        super.endElement("type");
+    }
+
+    @Override
+    public void startPlayer() throws MQLException {
+        super.startElement("player");
+    }
+
+    @Override
+    public void endPlayer() throws MQLException {
+        super.endElement("player");
+    }
+
 }
