@@ -15,6 +15,9 @@
  */
 package com.semagia.mql.tolog.helpers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.semagia.mql.MQLException;
 import com.semagia.mql.tolog.ITologHandler;
 
@@ -23,306 +26,363 @@ import com.semagia.mql.tolog.ITologHandler;
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
-public class DelegatingTologHandler implements ITologHandler {
+public class LoggingTologHandler extends DelegatingTologHandler {
 
-    private final ITologHandler _handler;
+    private static final Logger _LOG = LoggerFactory.getLogger(LoggingTologHandler.class.getName());
 
-    public DelegatingTologHandler(final ITologHandler handler) {
-        if (handler == null) {
-            throw new IllegalArgumentException("The handler must not be null");
-        }
-        _handler = handler;
-    }
-
-    public ITologHandler getTologHandler() {
-        return _handler;
+    /**
+     * @param handler
+     */
+    public LoggingTologHandler(ITologHandler handler) {
+        super(handler);
     }
 
     @Override
     public void start() throws MQLException {
-        _handler.start();
+        _LOG.info("start");
+        super.start();
     }
 
     @Override
     public void end() throws MQLException {
-        _handler.end();
+        _LOG.info("end");
+        super.end();
     }
 
     @Override
     public void startSelect() throws MQLException {
-        _handler.startSelect();
+        _LOG.info("startSelect");
+        super.startSelect();
     }
 
     @Override
     public void namespace(String prefix, String iri, int kind)
             throws MQLException {
-        _handler.namespace(prefix, iri, kind);
+        _LOG.info("namespace, prefix='{}' iri='{}' kind='{}'", prefix, iri, kind);
+        super.namespace(prefix, iri, kind);
     }
 
     @Override
     public void startFunctionCall(String name) throws MQLException {
-        _handler.startFunctionCall(name);
+        _LOG.info("startFunctionCall");
+        super.startFunctionCall(name);
     }
 
     @Override
     public void endSelect() throws MQLException {
-        _handler.endSelect();
+        _LOG.info("endSelect");
+        super.endSelect();
     }
 
     @Override
     public void endFunctionCall() throws MQLException {
-        _handler.endFunctionCall();
+        _LOG.info("endFunctionCall");
+        super.endFunctionCall();
     }
 
     @Override
     public void startMerge() throws MQLException {
-        _handler.startMerge();
+        _LOG.info("startMerge");
+        super.startMerge();
     }
 
     @Override
     public void endMerge() throws MQLException {
-        _handler.endMerge();
+        _LOG.info("endMerge");
+        super.endMerge();
     }
 
     @Override
     public void startAssociationPredicate() throws MQLException {
-        _handler.startAssociationPredicate();
+        _LOG.info("startAssociationPredicate");
+        super.startAssociationPredicate();
     }
 
     @Override
     public void startInsert() throws MQLException {
-        _handler.startInsert();
+        _LOG.info("startInsert");
+        super.startInsert();
     }
 
     @Override
     public void endAssociationPredicate() throws MQLException {
-        _handler.endAssociationPredicate();
+        _LOG.info("endAssociationPredicate");
+        super.endAssociationPredicate();
     }
 
     @Override
     public void startBuiltinPredicate(String name) throws MQLException {
-        _handler.startBuiltinPredicate(name);
+        _LOG.info("startBuiltinPredicate, name='{}'", name);
+        super.startBuiltinPredicate(name);
     }
 
     @Override
     public void endInsert() throws MQLException {
-        _handler.endInsert();
+        _LOG.info("endInsert");
+        super.endInsert();
     }
 
     @Override
     public void endBuiltinPredicate() throws MQLException {
-        _handler.endBuiltinPredicate();
+        _LOG.info("endBuiltinPredicate");
+        super.endBuiltinPredicate();
     }
 
     @Override
     public void startRule(String name, String[] variables) throws MQLException {
-        _handler.startRule(name, variables);
+        StringBuilder buff = new StringBuilder();
+        for (String var: variables) {
+            buff.append("'" + var + "', ");
+        }
+        _LOG.info("startRule name='{}' variables=[{}]", name, buff.toString());
+        super.startRule(name, variables);
     }
 
     @Override
     public void endRule() throws MQLException {
-        _handler.endRule();
+        _LOG.info("endRule");
+        super.endRule();
     }
 
     @Override
     public void startUpdate() throws MQLException {
-        _handler.startUpdate();
+        _LOG.info("startUpdate");
+        super.startUpdate();
     }
 
     @Override
     public void startInfixPredicate(String name) throws MQLException {
-        _handler.startInfixPredicate(name);
+        _LOG.info("startInfixPredicate name='{}'", name);
+        super.startInfixPredicate(name);
     }
 
     @Override
     public void endInfixPredicate() throws MQLException {
-        _handler.endInfixPredicate();
+        _LOG.info("endInfixPredicate");
+        super.endInfixPredicate();
     }
 
     @Override
     public void startFragment() throws MQLException {
-        _handler.startFragment();
+        _LOG.info("startFragment");
+        super.startFragment();
     }
 
     @Override
     public void endFragment() throws MQLException {
-        _handler.endFragment();
+        _LOG.info("endFragment");
+        super.endFragment();
     }
 
     @Override
     public void endUpdate() throws MQLException {
-        _handler.endUpdate();
+        _LOG.info("endUpdate");
+        super.endUpdate();
     }
 
     @Override
     public void fragmentContent(String content) throws MQLException {
-        _handler.fragmentContent(content);
+        _LOG.info("fragmentContent content='{}'", content);
+        super.fragmentContent(content);
     }
 
     @Override
     public void qname(int kind, String prefix, String localPart)
             throws MQLException {
-        _handler.qname(kind, prefix, localPart);
+        _LOG.info("qname kind='{}' prefix='{}' localpart='{}'", kind, prefix, localPart);
+        super.qname(kind, prefix, localPart);
     }
 
     @Override
     public void startDelete() throws MQLException {
-        _handler.startDelete();
+        _LOG.info("startDelete");
+        super.startDelete();
     }
 
     @Override
     public void variable(String name) throws MQLException {
-        _handler.variable(name);
+        _LOG.info("variable name='{}'", name);
+        super.variable(name);
     }
 
     @Override
     public void startName() throws MQLException {
-        _handler.startName();
+        _LOG.info("startName");
+        super.startName();
     }
 
     @Override
     public void endName() throws MQLException {
-        _handler.endName();
+        _LOG.info("endName");
+        super.endName();
     }
 
     @Override
     public void startDynamicPredicate() throws MQLException {
-        _handler.startDynamicPredicate();
+        _LOG.info("startDynamicPredicate");
+        super.startDynamicPredicate();
     }
 
     @Override
     public void endDelete() throws MQLException {
-        _handler.endDelete();
+        _LOG.info("endDelete");
+        super.endDelete();
     }
 
     @Override
     public void endDynamicPredicate() throws MQLException {
-        _handler.endDynamicPredicate();
+        _LOG.info("endDynamicPredicate");
+        super.endDynamicPredicate();
     }
 
     @Override
     public void startPredicate() throws MQLException {
-        _handler.startPredicate();
+        _LOG.info("startPredicate");
+        super.startPredicate();
     }
 
     @Override
     public void endPredicate() throws MQLException {
-        _handler.endPredicate();
+        _LOG.info("endPredicate");
+        super.endPredicate();
     }
 
     @Override
     public void startPagination() throws MQLException {
-        _handler.startPagination();
+        _LOG.info("startPagination");
+        super.startPagination();
     }
 
     @Override
     public void startPair() throws MQLException {
-        _handler.startPair();
+        _LOG.info("startPair");
+        super.startPair();
     }
 
     @Override
     public void endPair() throws MQLException {
-        _handler.endPair();
+        _LOG.info("endPair");
+        super.endPair();
     }
 
     @Override
     public void startType() throws MQLException {
-        _handler.startType();
+        _LOG.info("startType");
+        super.startType();
     }
 
     @Override
     public void endType() throws MQLException {
-        _handler.endType();
+        _LOG.info("endType");
+        super.endType();
     }
 
     @Override
     public void endPagination() throws MQLException {
-        _handler.endPagination();
+        _LOG.info("endPagination");
+        super.endPagination();
     }
 
     @Override
     public void startPlayer() throws MQLException {
-        _handler.startPlayer();
+        _LOG.info("startPlayer");
+        super.startPlayer();
     }
 
     @Override
     public void endPlayer() throws MQLException {
-        _handler.endPlayer();
+        _LOG.info("endPlayer");
+        super.endPlayer();
     }
 
     @Override
     public void offset(int offset) throws MQLException {
-        _handler.offset(offset);
+        _LOG.info("offset='{}'", offset);
+        super.offset(offset);
     }
 
     @Override
     public void limit(int limit) throws MQLException {
-        _handler.limit(limit);
+        _LOG.info("limit='{}'", limit);
+        super.limit(limit);
     }
 
     @Override
     public void startOrderBy() throws MQLException {
-        _handler.startOrderBy();
+        _LOG.info("startOrderBy");
+        super.startOrderBy();
     }
 
     @Override
     public void endOrderBy() throws MQLException {
-        _handler.endOrderBy();
+        _LOG.info("endOrderBy");
+        super.endOrderBy();
     }
 
     @Override
     public void ascending(String variable) throws MQLException {
-        _handler.ascending(variable);
+        _LOG.info("ascending='{}'", variable);
+        super.ascending(variable);
     }
 
     @Override
     public void descending(String variable) throws MQLException {
-        _handler.descending(variable);
+        _LOG.info("descending='{}'", variable);
+        super.descending(variable);
     }
 
     @Override
     public void startWhere() throws MQLException {
-        _handler.startWhere();
+        _LOG.info("startWhere");
+        super.startWhere();
     }
 
     @Override
     public void endWhere() throws MQLException {
-        _handler.endWhere();
+        _LOG.info("endWhere");
+        super.endWhere();
     }
 
     @Override
     public void count(String variable) throws MQLException {
-        _handler.count(variable);
+        _LOG.info("count='{}'", variable);
+        super.count(variable);
     }
 
     @Override
     public void startOr() throws MQLException {
-        _handler.startOr();
+        _LOG.info("startOr");
+        super.startOr();
     }
 
     @Override
     public void endOr() throws MQLException {
-        _handler.endOr();
+        _LOG.info("endOr");
+        super.endOr();
     }
 
     @Override
     public void startBranch(boolean shortcircuit) throws MQLException {
-        _handler.startBranch(shortcircuit);
+        _LOG.info("startBranch shortcircuit='{}'", shortcircuit);
+        super.startBranch(shortcircuit);
     }
 
     @Override
     public void endBranch() throws MQLException {
-        _handler.endBranch();
+        _LOG.info("endBranch");
+        super.endBranch();
     }
 
     @Override
     public void startNot() throws MQLException {
-        _handler.startNot();
+        _LOG.info("startNot");
+        super.startNot();
     }
 
     @Override
     public void endNot() throws MQLException {
-        _handler.endNot();
+        _LOG.info("endNot");
+        super.endNot();
     }
 
 }
