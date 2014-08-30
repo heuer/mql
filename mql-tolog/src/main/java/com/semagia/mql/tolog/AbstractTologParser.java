@@ -88,7 +88,7 @@ abstract class AbstractTologParser {
         else {
             if (isIdent && _predClause.arguments.length == 2 && !_isRule(name)) {
                 _handler.startDynamicPredicate();
-                _issueNameEvent();
+                issueNameEvent(_predClause.ref);
                 issueArgumentEvents();
                 _handler.endDynamicPredicate();
                 handled = true;
@@ -100,7 +100,7 @@ abstract class AbstractTologParser {
                 }
                 if (binding.kind != _BINDING_KIND_MODULE) {
                     _handler.startDynamicPredicate();
-                    _issueNameEvent();
+                    issueNameEvent(_predClause.ref);
                     issueArgumentEvents();
                     _handler.endDynamicPredicate();
                     handled = true;
@@ -109,7 +109,7 @@ abstract class AbstractTologParser {
         }
         if (!handled) {
             _handler.startPredicate();
-            _issueNameEvent();
+            issueNameEvent(_predClause.ref);
             issueArgumentEvents();
             _handler.endPredicate();
         }
@@ -122,11 +122,19 @@ abstract class AbstractTologParser {
         
     }
 
-    protected final void _issueNameEvent() throws MQLException {
+    protected final void issueNameEvent(final TologReference name) throws MQLException {
         _handler.startName();
-        issueEvent(_predClause.ref);
+        issueEvent(name);
         _handler.endName();
     }
+
+    public void handleInfixPredicate(String name, TologReference lhs, TologReference rhs) throws MQLException {
+        _handler.startInfixPredicate(name);
+        issueEvent(lhs);
+        issueEvent(rhs);
+        _handler.endInfixPredicate();
+    }
+
 
     protected final void issueEvent(TologReference ref) throws MQLException {
         // TODO Auto-generated method stub
@@ -137,6 +145,17 @@ abstract class AbstractTologParser {
         //TODO: Check if exists
         _prefixes.put(ident, new PrefixBinding(iri, kind));
         _handler.namespace(ident, iri, kind);
+    }
+
+    public void handlePair(TologReference type, TologReference player) throws MQLException {
+        _handler.startPair();
+        _handler.startType();
+        issueEvent(type);
+        _handler.endType();
+        _handler.startPlayer();
+        issueEvent(player);
+        _handler.endPlayer();
+        _handler.endPair();
     }
 
     protected final static class PredicateClause {

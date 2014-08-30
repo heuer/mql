@@ -25,7 +25,7 @@ import com.semagia.mql.MQLException;
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
-final class TologParser extends RealTologParser {
+public final class TologParser extends RealTologParser implements ITologParser {
 
     /**
      * Parses a tolog query using the provided {@code reader}.
@@ -48,7 +48,9 @@ final class TologParser extends RealTologParser {
      */
     public void parse(final TologLexer lexer) throws IOException, MQLException {
         try {
+            super._handler.start();
             yyparse(lexer);
+            super._handler.end();
         }
         catch (yyException ex) {
             throw new MQLException(ex.getMessage(), ex);

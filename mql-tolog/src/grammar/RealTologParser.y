@@ -163,7 +163,7 @@ clause      : predclause                       { super.handlePredicateClause(); 
 assoc_head  : ref LPAREN expr COLON ref     { _handler.startAssociationPredicate(); super.issueNameEvent($1); super.handlePair($5, $3); }
             ;
 
-predclause  : ref LPAREN arguments RPAREN   { _predClause.ref = $1; _predClause.arguments = $3.toArray(new TologReference[0]); }
+predclause  : ref LPAREN arguments RPAREN   { super._predClause.ref = $1; super._predClause.arguments = $3.toArray(new TologReference[0]); }
             ;
 
 opt_more_pairs  
@@ -178,7 +178,7 @@ pairs       : pair
 pair        : expr COLON ref                { super.handlePair($3, $1); }
             ;
 
-arguments   : expr                          { List<TologReference> args = new ArrayList<TologReference>(); args.add($1); $$ = args; }
+arguments   : expr                          { List<TologReference> args = new ArrayList<TologReference>(2); args.add($1); $$ = args; }
             | arguments COMMA expr          { $1.add($3); $$ = $1; }
             ;
 
