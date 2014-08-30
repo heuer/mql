@@ -49,7 +49,7 @@ public class TestTologLexer extends TestCase {
     }
 
     public void testSubjectIdentifier() throws Exception {
-        final String input = "i\"http://psi.semagia.com/test\" i<http://psi.semagia.com/test>";
+        final String input = "i\"http://psi.semagia.com/test\" i\"#test\"";
         final int[] expected = new int[] { 
                 TokenTypes.SID, 
                 TokenTypes.SID
@@ -58,7 +58,7 @@ public class TestTologLexer extends TestCase {
     }
 
     public void testSubjectLocator() throws Exception {
-        final String input = "a\"http://psi.semagia.com/test\" a<http://psi.semagia.com/test>";
+        final String input = "a\"http://psi.semagia.com/test\" a\"#test\"";
         final int[] expected = new int[] { 
                 TokenTypes.SLO, 
                 TokenTypes.SLO
@@ -67,7 +67,7 @@ public class TestTologLexer extends TestCase {
     }
 
     public void testItemIdentifier() throws Exception {
-        final String input = "s\"http://psi.semagia.com/test\" s<http://psi.semagia.com/test>";
+        final String input = "s\"http://psi.semagia.com/test\" s\"#test\"";
         final int[] expected = new int[] { 
                 TokenTypes.IID, 
                 TokenTypes.IID

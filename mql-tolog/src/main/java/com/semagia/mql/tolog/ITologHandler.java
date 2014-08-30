@@ -15,6 +15,7 @@
  */
 package com.semagia.mql.tolog;
 
+import com.semagia.mio.IRef;
 import com.semagia.mql.IQueryHandler;
 import com.semagia.mql.MQLException;
 
@@ -25,7 +26,13 @@ import com.semagia.mql.MQLException;
  */
 public interface ITologHandler extends IQueryHandler {
 
-    void namespace(String ident, String iri, int kind) throws MQLException;
+    public final int PREFIX_KIND_SUBJECT_IDENTIFIER = IRef.SUBJECT_IDENTIFIER,
+                     PREFIX_KIND_SUBJECT_LOCATOR = IRef.SUBJECT_LOCATOR,
+                     PREFIX_KIND_ITEM_IDENTIFIER = IRef.ITEM_IDENTIFIER,
+                     PREFIX_KIND_MODULE = -1001;
+            
+
+    void namespace(String prefix, String iri, int kind) throws MQLException;
 
     void startFunctionCall(String name) throws MQLException;
 
@@ -43,7 +50,7 @@ public interface ITologHandler extends IQueryHandler {
 
     void endBuiltinPredicate() throws MQLException;
 
-    void startRule(String name, String... variables) throws MQLException;
+    void startRule(String name, String[] variables) throws MQLException;
 
     void endRule() throws MQLException;
 
@@ -72,5 +79,9 @@ public interface ITologHandler extends IQueryHandler {
     void startPredicate() throws MQLException;
 
     void endPredicate() throws MQLException;
+
+    void startPair() throws MQLException;
+
+    void endPair() throws MQLException;
 
 }

@@ -29,7 +29,7 @@ import com.semagia.mql.MQLException;
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
-public abstract class AbstractSAXQueryHandler implements IQueryHandler {
+public abstract class AbstractSAXEmittingQueryHandler implements IQueryHandler {
 
     protected static final Attributes _EMPTY_ATTRS = new AttributesImpl();
     
@@ -38,7 +38,7 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
 
     private final String _namespace;
 
-    protected AbstractSAXQueryHandler(final ContentHandler handler, final String namespace) {
+    protected AbstractSAXEmittingQueryHandler(final ContentHandler handler, final String namespace) {
         _handler = handler;
         _namespace = namespace;
     }
@@ -304,7 +304,7 @@ public abstract class AbstractSAXQueryHandler implements IQueryHandler {
         emptyElement(name, new String[][]{{key, value}});
     }
 
-    private final void emptyElement(final String name, final String[][] attrs) throws MQLException {
+    protected final void emptyElement(final String name, final String[][] attrs) throws MQLException {
         startElement(name, attrs);
         endElement(name);
     }

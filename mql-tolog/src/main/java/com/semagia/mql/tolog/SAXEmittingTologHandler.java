@@ -6,18 +6,18 @@ package com.semagia.mql.tolog;
 import org.xml.sax.ContentHandler;
 
 import com.semagia.mql.MQLException;
-import com.semagia.mql.base.AbstractSAXQueryHandler;
+import com.semagia.mql.base.AbstractSAXEmittingQueryHandler;
 
 /**
  * @author lars
  *
  */
-public class SAXTologHandler extends AbstractSAXQueryHandler implements
+public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler implements
         ITologHandler {
 
     private static final String TOLOG_NS = "http://psi.semagia.com/tolog-xml/";
 
-    public SAXTologHandler(ContentHandler handler) {
+    public SAXEmittingTologHandler(ContentHandler handler) {
         super(handler, TOLOG_NS);
     }
 
@@ -69,7 +69,7 @@ public class SAXTologHandler extends AbstractSAXQueryHandler implements
     }
 
     @Override
-    public void startRule(String name, String... variables) throws MQLException {
+    public void startRule(String name, String[] variables) throws MQLException {
         super.startElement("rule", "name", name);
         for (String var: variables) {
             super.variable(var);
@@ -110,7 +110,7 @@ public class SAXTologHandler extends AbstractSAXQueryHandler implements
 
     @Override
     public void qname(int kind, final String prefix, final String localPart) throws MQLException {
-        super.startElement("qname", new String[][]{{"prefix", prefix}, {"localpart", localPart}});
+        super.emptyElement("qname", new String[][]{{"prefix", prefix}, {"localpart", localPart}});
     }
 
     /* (non-Javadoc)
@@ -159,6 +159,16 @@ public class SAXTologHandler extends AbstractSAXQueryHandler implements
     @Override
     public void endPredicate() throws MQLException {
         super.endElement("predicate");
+    }
+
+    @Override
+    public void startPair() throws MQLException {
+        super.startElement("pair");
+    }
+
+    @Override
+    public void endPair() throws MQLException {
+        super.endElement("pair");
     }
 
 }

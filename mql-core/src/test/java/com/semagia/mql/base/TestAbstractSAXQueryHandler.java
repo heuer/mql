@@ -33,7 +33,7 @@ import nu.xom.Nodes;
 import nu.xom.XPathContext;
 
 /**
- * Tests against the {@link AbstractSAXQueryHandler}.
+ * Tests against the {@link AbstractSAXEmittingQueryHandler}.
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
@@ -100,7 +100,7 @@ public class TestAbstractSAXQueryHandler extends TestCase {
         assertEquals("var", attr.getValue());
     }
 
-    private static class MockSAXQueryHandler extends AbstractSAXQueryHandler {
+    private static class MockSAXQueryHandler extends AbstractSAXEmittingQueryHandler {
 
         public MockSAXQueryHandler(final ContentHandler handler, final String ns) {
             super(handler, ns);

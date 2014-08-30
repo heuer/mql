@@ -19,10 +19,7 @@ package com.semagia.mql.tolog;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.semagia.mio.IRef;
 import com.semagia.mio.ctm.CTMUtils;
-import com.semagia.mql.MQLException;
-import com.semagia.mql.tolog.TologReference;
 
 /**
  * This tolog parser utilizes the AbstractTologParser and is responsible for 
@@ -32,16 +29,6 @@ import com.semagia.mql.tolog.TologReference;
  */
 class RealTologParser extends AbstractTologParser { 
 
-    private Tuple _predicateRef;
-    private Tuple[] _predicateArgs;
-
-    private static void _handlePair(final ITologHandler handler, 
-                                    final IExpression type, final IExpression player) {
-        handler.startPair();
-        handler.type(type);
-        handler.player(player);
-        handler.endPair();
-    }
 
 %}
 
@@ -65,20 +52,24 @@ class RealTologParser extends AbstractTologParser {
 
     STRING, DATE, DATE_TIME, INTEGER, DECIMAL, IRI,
 
-    TM_FRAGMENT,
+    TM_FRAGMENT
 
 %token<String>
     IDENT
+    IRI
+    SLO
+    SID
+    IID
     INTEGER
     STRING
     VARIABLE
     TM_FRAGMENT
 
 %type <TologReference>
-    ref, SLO, SID, IID, qname, qiri, expr,
+    ref, qname, qiri, expr,
     uri_ref, variable, value, parameter
 
-%type <List<TopicReference>>
+%type <List<TologReference>>
     arguments
 
 %%
@@ -122,7 +113,7 @@ clause_query
 select_query
             : KW_SELECT                     { _handler.startSelect(); } 
               select_elements 
-              from_clause opt_tail QM       { _handler.endSelect(); }
+              where_clause opt_tail QM      { _handler.endSelect(); }
             ;
 
 select_elements 
@@ -152,8 +143,7 @@ order_element
 
 limit_offset    
             : KW_OFFSET                     { _handler.startPagination(); } 
-              INTEGER                       { _handler.offset(Integer.parseInt($3)); 
-                                              _handler.endPagination(); }
+              INTEGER                       { _handler.offset(Integer.parseInt($3)); _handler.endPagination(); }
             | KW_LIMIT                      { _handler.startPagination(); } 
               INTEGER                       { _handler.limit(Integer.parseInt($3)); }
               opt_offset                    { _handler.endPagination(); }
@@ -166,15 +156,14 @@ rule        : predclause IMPLIES            { super.handleRuleStart(); }
               clauselist DOT                { _handler.endRule(); }
             ;
 
-clause      : predclause                    { super.handlePredicateClause(); }
+clause      : predclause                       { super.handlePredicateClause(); }
             | assoc_head opt_more_pairs RPAREN { _handler.endAssociationPredicate(); }
             ;
 
-assoc_head  : ref LPAREN expr COLON ref     { _handler.startAssociationPredicate(); 
-                                              _handlePair(_handler, $3, $5); }
+assoc_head  : ref LPAREN expr COLON ref     { _handler.startAssociationPredicate(); super.issueNameEvent($1); super.handlePair($5, $3); }
             ;
 
-predclause  : ref LPAREN arguments RPAREN   { _predClause.ref = $1; _predClause.arguments = $3.toArray(new Tuple[0]); }
+predclause  : ref LPAREN arguments RPAREN   { _predClause.ref = $1; _predClause.arguments = $3.toArray(new TologReference[0]); }
             ;
 
 opt_more_pairs  
@@ -186,11 +175,10 @@ pairs       : pair
             | pairs COMMA pair
             ;
 
-pair        : expr COLON ref                { _handlePair(_handler, $1, $3); }
+pair        : expr COLON ref                { super.handlePair($3, $1); }
             ;
 
-arguments   : expr                          { List<TologReference> args = new ArrayList<TologReference>(); 
-                                              args.add($1); $$ = args; }
+arguments   : expr                          { List<TologReference> args = new ArrayList<TologReference>(); args.add($1); $$ = args; }
             | arguments COMMA expr          { $1.add($3); $$ = $1; }
             ;
 
@@ -203,12 +191,12 @@ expr        : variable                      { $$ = $1; }
 variable    : VARIABLE                      { $$ = TologReference.createVariable($1); }
             ;
 
-opclause    : expr EQ expr                  { _handler.startInfixPredicate("eq"); _handler.endInfixPredicate(); }
-            | expr NE expr                  { _handler.startInfixPredicate("ne"); _handler.endInfixPredicate(); }
-            | expr LE expr                  { _handler.startInfixPredicate("le"); _handler.endInfixPredicate(); }
-            | expr LT expr                  { _handler.startInfixPredicate("lt"); _handler.endInfixPredicate(); }
-            | expr GE expr                  { _handler.startInfixPredicate("ge"); _handler.endInfixPredicate(); }
-            | expr GT expr                  { _handler.startInfixPredicate("gt"); _handler.endInfixPredicate(); }
+opclause    : expr EQ expr                  { super.handleInfixPredicate("eq", $1, $3); }
+            | expr NE expr                  { super.handleInfixPredicate("ne", $1, $3); }
+            | expr LE expr                  { super.handleInfixPredicate("le", $1, $3); }
+            | expr LT expr                  { super.handleInfixPredicate("lt", $1, $3); }
+            | expr GE expr                  { super.handleInfixPredicate("ge", $1, $3); }
+            | expr GT expr                  { super.handleInfixPredicate("gt", $1, $3); }
             ;
 
 orclause    : LCURLY                        { _handler.startOr(); _handler.startBranch(false); }
@@ -225,11 +213,9 @@ oredclauses : oredclause
             | oredclauses oredclause
             ;
 
-oredclause  : PIPE                          { _handler.endBranch(); 
-                                              _handler.startBranch(false); } 
+oredclause  : PIPE                          { _handler.endBranch(); _handler.startBranch(false); } 
               clauselist
-            | PIPE_PIPE                     { _handler.endBranch(); 
-                                              _handler.startBranch(true); } 
+            | PIPE_PIPE                     { _handler.endBranch(); _handler.startBranch(true); } 
               clauselist
             ;
 
@@ -240,15 +226,14 @@ notclause   : KW_NOT                        { _handler.startNot(); }
 parameter   : PARAM
             ;
 
-value       : STRING DOUBLE_CIRCUMFLEX datatype
-            | STRING
+value       : STRING
             | INTEGER
             | DECIMAL
             | DATE
             | DATE_TIME
             ;
 
-string      : STRING                        { TologReference.createString($1); }
+string      : STRING                        { $$ = TologReference.createString($1); }
             ;
 
 datatype    : STRING                        { }
@@ -256,25 +241,25 @@ datatype    : STRING                        { }
             ;
 
 
-ref         : uri_ref                       { $$=$1; }
-            | IDENT                         { }
+ref         : uri_ref                       { $$ = $1; }
+            | IDENT                         { $$ = TologReference.createIdent($1); }
             | OID                           { }
             ;
 
-uri_ref     : SID                           {  }
-            | SLO                           { }
-            | IID                           { }
-            | qiri                          { $$=$1; }
+uri_ref     : SID                           { $$ = TologReference.createSID($1); }
+            | SLO                           { $$ = TologReference.createSLO($1); }
+            | IID                           { $$ = TologReference.createIID($1); }
+            | qiri                          { $$ = $1; }
             ;
 
-qiri        : IRI
-            | qname                         { $$=$1; }
+qiri        : IRI                           { $$ = TologReference.createIRI($1); }
+            | qname                         { $$ = $1; }
             ;
 
 qname       : QNAME                         { }
             ;
 
-variable    : VARIABLE                      { _handler.variable($1); }
+variable    : VARIABLE                      { $$ = TologReference.createVariable($1); }
             ;
 
 clauselist  : clause
@@ -294,9 +279,9 @@ delete_element
 paramlist   : param
             | paramlist COMMA param
 
-opt_from_clause 
+opt_where_clause 
             : 
-            | from_clause
+            | where_clause
 
 opt_tail    : 
             | tail
@@ -315,8 +300,8 @@ opt_limit_offset
             | limit_offset
             ;
 
-delete      : KW_DELETE                      { _handler.startDelete(); }
-              delete_element opt_from_clause { _handler.endDelete(); }
+delete      : KW_DELETE                       { _handler.startDelete(); }
+              delete_element opt_where_clause { _handler.endDelete(); }
             ;
 
 function_call   
@@ -337,23 +322,24 @@ insert      : KW_INSERT                     { _handler.startInsert(); }
                                               }
                                               _handler.fragmentContent(content);
                                               _handler.endFragment(); } 
-              opt_from_clause               { _handler.endInsert(); }
+              opt_where_clause              { _handler.endInsert(); }
             ;
 
 update      : KW_UPDATE                     { _handler.startUpdate(); } 
-              function_call from_clause     { _handler.endUpdate(); }
+              function_call where_clause    { _handler.endUpdate(); }
             ;
 
 merge       : KW_MERGE                      { _handler.startMerge(); }
               literal COMMA literal 
-              opt_from_clause               { _handler.endMerge(); }
+              opt_where_clause              { _handler.endMerge(); }
             ;
 
 literal     : variable                      { $$ = $1; }
             | ref                           { $$ = $1; }
             ;
 
-from_clause : KW_FROM                       { _handler.startWhere(); } 
+where_clause
+            : KW_FROM                       { _handler.startWhere(); } 
               clauselist                    { _handler.endWhere(); }
             ;
 
