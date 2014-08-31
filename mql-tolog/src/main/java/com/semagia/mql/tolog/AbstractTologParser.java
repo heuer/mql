@@ -30,12 +30,6 @@ abstract class AbstractTologParser {
 
     private static final ITologHandler _DEFAULT_HANDLER = new DefaultTologHandler();
 
-    private static final int 
-        _BINDING_KIND_MODULE = 1,
-        _BINDING_KIND_SID = 2,
-        _BINDING_KIND_SLO = 3,
-        _BINDING_KIND_IID = 4;
-
     protected ITologHandler _handler;
     protected final PredicateClause _predClause;
     private final Map<String, PrefixBinding> _prefixes;
@@ -98,7 +92,7 @@ abstract class AbstractTologParser {
                 if (binding == null) {
                     throw new MQLException("Unknown prefix '" + name + "'");
                 }
-                if (binding.kind != _BINDING_KIND_MODULE) {
+                if (binding.kind != ITologHandler.PREFIX_KIND_MODULE) {
                     _handler.startDynamicPredicate();
                     issueNameEvent(_predClause.ref);
                     issueArgumentEvents();
@@ -134,6 +128,10 @@ abstract class AbstractTologParser {
         _handler.endInfixPredicate();
     }
 
+    private final void issueEvent(final TologReference ref) throws MQLException {
+        issueEvent(ref, false);
+    }
+
     private final void issueEvent(final TologReference ref, boolean convertStringToIRI) throws MQLException {
         final String val = ref.getValue();
         switch (ref.getType()) {
@@ -146,10 +144,6 @@ abstract class AbstractTologParser {
             case TologReference.PARAMETER: _handler.parameter(val); break;
             case TologReference.IDENT: _handler.itemIdentifier("#" + val); break;
         }
-    }
-
-    private final void issueEvent(final TologReference ref) throws MQLException {
-        issueEvent(ref, false);
     }
 
     protected void registerNamespace(String ident, String iri, int kind) throws MQLException {

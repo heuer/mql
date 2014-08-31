@@ -54,7 +54,7 @@ final class TokenTypes {
         IID = TologParser.IID,
         OID = TologParser.OID,
         VARIABLE = TologParser.VARIABLE,
-        PARAM = TologParser.PARAM,
+        PARAMETER = TologParser.PARAMETER,
 
         // Delimiters
         // Brackets
@@ -134,7 +134,7 @@ final class TokenTypes {
             case IID:           return "<item-identifier>";
             case OID:           return "<object-identifier>";
             case VARIABLE:      return "<variable>";
-            case PARAM:         return "<parameter>";
+            case PARAMETER:     return "<parameter>";
 
             // Delimiters
             // Brackets

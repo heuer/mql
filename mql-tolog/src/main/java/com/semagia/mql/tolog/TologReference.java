@@ -31,7 +31,9 @@ final class TologReference extends Ref {
         STRING = 1002,
         QNAME = 1003,
         OID = 1004,
-        PARAMETER = 1005;
+        PARAMETER = 1005,
+        INTEGER = 1006,
+        DECIMAL = 1007;
 
     TologReference(String iri, int type) {
         super(iri, type);
@@ -75,6 +77,14 @@ final class TologReference extends Ref {
 
     public static TologReference createIID(String iri) {
         return new TologReference(iri, IID);
+    }
+
+    public static TologReference createInteger(String val) {
+        return new TologReference(val, INTEGER);
+    }
+
+    public static TologReference createDecimal(String val) {
+        return new TologReference(val, DECIMAL);
     }
 
 }

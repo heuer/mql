@@ -62,6 +62,8 @@ class RealTologParser extends AbstractTologParser {
     SID
     IID
     INTEGER
+    DECIMAL
+    PARAMETER
     STRING
     VARIABLE
     TM_FRAGMENT
@@ -225,12 +227,12 @@ notclause   : KW_NOT                        { _handler.startNot(); }
               LPAREN clauselist RPAREN      { _handler.endNot(); }
             ;
 
-parameter   : PARAM                         { $$ = TologReference.createParameter($1); }
+parameter   : PARAMETER                     { $$ = TologReference.createParameter($1); }
             ;
 
 value       : STRING                        { $$ = TologReference.createString($1); }
-            | INTEGER
-            | DECIMAL
+            | INTEGER                       { $$ = TologReference.createInteger($1); }
+            | DECIMAL                       { $$ = TologReference.createDecimal($1); }
             ;
 
 string      : STRING                        { $$ = TologReference.createString($1); }

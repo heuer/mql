@@ -141,7 +141,7 @@ CTMString       = (\"([^\\\"]|(\\[\\\"rntuU]))*\")|\"{3} ~\"{3}
     {IID}               { return _token(TokenTypes.IID, 2, 1); }
     {OID}               { return _token(TokenTypes.OID, 1, 0); }
     {Variable}          { return _token(TokenTypes.VARIABLE, 1, 0); }
-    {Parameter}         { return _token(TokenTypes.PARAM, 1, 1); }
+    {Parameter}         { return _token(TokenTypes.PARAMETER, 1, 1); }
 
     {QName}             { return _token(TokenTypes.QNAME); }
     {Identifier}        { return _token(TokenTypes.IDENT); }
