@@ -216,4 +216,6 @@ public interface IQueryHandler {
      * @throws MQLException In case of an error.
      */
     void endNot() throws MQLException;
+
+    void variable(String name) throws MQLException;
 }

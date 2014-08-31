@@ -325,4 +325,39 @@ public class DelegatingTologHandler implements ITologHandler {
         _handler.endNot();
     }
 
+    @Override
+    public void subjectIdentifier(String iri) throws MQLException {
+        _handler.subjectIdentifier(iri);
+    }
+
+    @Override
+    public void subjectLocator(String iri) throws MQLException {
+        _handler.subjectLocator(iri);
+    }
+
+    @Override
+    public void itemIdentifier(String iri) throws MQLException {
+        _handler.itemIdentifier(iri);
+    }
+
+    @Override
+    public void objectId(String ident) throws MQLException {
+        _handler.objectId(ident);
+    }
+
+    @Override
+    public void string(String val) throws MQLException {
+        _handler.string(val);
+    }
+
+    @Override
+    public void parameter(String name) throws MQLException {
+        _handler.parameter(name);
+    }
+
+    @Override
+    public void iri(String iri) throws MQLException {
+        _handler.iri(iri);
+    }
+
 }

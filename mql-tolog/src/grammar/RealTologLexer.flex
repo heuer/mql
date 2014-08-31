@@ -89,19 +89,16 @@ Parameter       = "%"{Identifier}"%"
 QName           = {Identifier}":"([0-9]|{IdentifierStart}){IdentifierChar}*
 
 URI             = \"[^\"]+\"
-SID             = i{URI}
-IID             = s{URI}
-SLO             = a{URI}
-OID             = @{Identifier}
+SID             = "i"{URI}
+IID             = "s"{URI}
+SLO             = "a"{URI}
+OID             = "@"{IdentifierChar}+
 
 String          = \"([^\"]|\"\")*\"
-IRI             = "<"[^<>\"\{\}\`\\ ]+">"
+//IRI             = "<"[^<>\"\{\}\`\\ ]+">"
 Integer         = ("-" | "+")? [0-9]+
 Decimal         = ("-" | "+")? ( [0-9]+ \. [0-9]+ | \. ([0-9])+ )
-Date            = ("-" | "+")? [0-9]{4} [0-9]* "-" (0 [1-9] | 1 [0-2]) "-" (0 [1-9] | 1 [0-9] | 2 [0-9] | 3 [0-1])
-Time            = [0-9]{2} : [0-9]{2} : [0-9]{2} (\.[0-9]+)? ({TimeZone})?
-TimeZone        = Z | ( ( "+" | "-" ) [0-9]{2} : [0-9]{2} )
-DateTime        = {Date}"T"{Time} 
+ 
 
 // CTM-specific grammar
 CTMComment      = ("#(" ([^)]* [^#])*  ")#") | "#"[^(][^\r\n]*
@@ -175,9 +172,7 @@ CTMString       = (\"([^\\\"]|(\\[\\\"rntuU]))*\")|\"{3} ~\"{3}
 
     // Datatypes
     {String}            { return _token(TokenTypes.STRING, 1, 1); }
-    {IRI}               { return _token(TokenTypes.IRI, 1, 1); }
-    {Date}              { return _token(TokenTypes.DATE); }
-    {DateTime}          { return _token(TokenTypes.DATE_TIME); }
+//    {IRI}               { return _token(TokenTypes.IRI, 1, 1); }
     {Integer}           { return _token(TokenTypes.INTEGER); }
     {Decimal}           { return _token(TokenTypes.DECIMAL); }
 

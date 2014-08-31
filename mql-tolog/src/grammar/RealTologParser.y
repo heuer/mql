@@ -57,6 +57,7 @@ class RealTologParser extends AbstractTologParser {
 %token<String>
     IDENT
     IRI
+    OID
     SLO
     SID
     IID
@@ -67,7 +68,8 @@ class RealTologParser extends AbstractTologParser {
 
 %type <TologReference>
     ref, qname, qiri, expr,
-    uri_ref, variable, value, parameter
+    uri_ref, variable, value, parameter,
+    string
 
 %type <List<TologReference>>
     arguments
@@ -223,27 +225,20 @@ notclause   : KW_NOT                        { _handler.startNot(); }
               LPAREN clauselist RPAREN      { _handler.endNot(); }
             ;
 
-parameter   : PARAM
+parameter   : PARAM                         { $$ = TologReference.createParameter($1); }
             ;
 
-value       : STRING
+value       : STRING                        { $$ = TologReference.createString($1); }
             | INTEGER
             | DECIMAL
-            | DATE
-            | DATE_TIME
             ;
 
 string      : STRING                        { $$ = TologReference.createString($1); }
             ;
 
-datatype    : STRING                        { }
-            | qiri                          { }
-            ;
-
-
 ref         : uri_ref                       { $$ = $1; }
             | IDENT                         { $$ = TologReference.createIdent($1); }
-            | OID                           { }
+            | OID                           { $$ = TologReference.createOID($1); }
             ;
 
 uri_ref     : SID                           { $$ = TologReference.createSID($1); }

@@ -66,8 +66,6 @@ public interface ITologHandler extends IQueryHandler {
     
     void qname(int kind, String prefix, String localPart) throws MQLException;
 
-    void variable(String name) throws MQLException;
-
     void startName() throws MQLException;
 
     void endName() throws MQLException;
@@ -91,5 +89,19 @@ public interface ITologHandler extends IQueryHandler {
     void startPlayer() throws MQLException;
 
     void endPlayer() throws MQLException;
+
+    void objectId(String ident) throws MQLException;
+
+    void subjectIdentifier(String iri) throws MQLException;
+    
+    void subjectLocator(String iri) throws MQLException;
+
+    void itemIdentifier(String iri) throws MQLException;
+
+    void string(String val) throws MQLException;
+
+    void parameter(String name) throws MQLException;
+
+    void iri(String iri) throws MQLException;
 
 }

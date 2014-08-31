@@ -43,9 +43,6 @@ public abstract class AbstractSAXEmittingQueryHandler implements IQueryHandler {
         _namespace = namespace;
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#start()
-     */
     @Override
     public void start() throws MQLException {
         try {
@@ -71,121 +68,76 @@ public abstract class AbstractSAXEmittingQueryHandler implements IQueryHandler {
         }
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#startSelect()
-     */
     @Override
     public void startSelect() throws MQLException {
         startElement("select");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#endSelect()
-     */
     @Override
     public void endSelect() throws MQLException {
         endElement("select");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#startInsert()
-     */
     @Override
     public void startInsert() throws MQLException {
         startElement("insert");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#endInsert()
-     */
     @Override
     public void endInsert() throws MQLException {
         endElement("insert");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#startUpdate()
-     */
     @Override
     public void startUpdate() throws MQLException {
         startElement("update");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#endUpdate()
-     */
     @Override
     public void endUpdate() throws MQLException {
         endElement("update");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#startDelete()
-     */
     @Override
     public void startDelete() throws MQLException {
         startElement("delete");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#endDelete()
-     */
     @Override
     public void endDelete() throws MQLException {
         endElement("delete");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#startPagination()
-     */
     @Override
     public void startPagination() throws MQLException {
         startElement("pagination");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#endPagination()
-     */
     @Override
     public void endPagination() throws MQLException {
         endElement("pagination");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#offset(int)
-     */
     @Override
     public void offset(int offset) throws MQLException {
         emptyElement("offset", "value", offset);
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#limit(int)
-     */
     @Override
     public void limit(int limit) throws MQLException {
         emptyElement("limit", "value", limit);
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#startOrderBy()
-     */
     @Override
     public void startOrderBy() throws MQLException {
         startElement("order-by");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#endOrderBy()
-     */
     @Override
     public void endOrderBy() throws MQLException {
         endElement("order-by");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#ascending(java.lang.String)
-     */
     @Override
     public void ascending(String variable) throws MQLException {
         startElement("asc");
@@ -193,9 +145,6 @@ public abstract class AbstractSAXEmittingQueryHandler implements IQueryHandler {
         endElement("asc");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#descending(java.lang.String)
-     */
     @Override
     public void descending(String variable) throws MQLException {
         startElement("desc");
@@ -203,25 +152,16 @@ public abstract class AbstractSAXEmittingQueryHandler implements IQueryHandler {
         endElement("desc");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#startWhere()
-     */
     @Override
     public void startWhere() throws MQLException {
         startElement("where");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#endWhere()
-     */
     @Override
     public void endWhere() throws MQLException {
         endElement("where");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#count(java.lang.String)
-     */
     @Override
     public void count(String variable) throws MQLException {
         startElement("count");
@@ -229,25 +169,16 @@ public abstract class AbstractSAXEmittingQueryHandler implements IQueryHandler {
         endElement("count");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#startOr()
-     */
     @Override
     public void startOr() throws MQLException {
         startElement("or");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#endOr()
-     */
     @Override
     public void endOr() throws MQLException {
         endElement("or");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#startBranch(boolean)
-     */
     @Override
     public void startBranch(boolean shortcircuit) throws MQLException {
         if (shortcircuit)   {
@@ -258,30 +189,22 @@ public abstract class AbstractSAXEmittingQueryHandler implements IQueryHandler {
         }
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#endBranch()
-     */
     @Override
     public void endBranch() throws MQLException {
         endElement("branch");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#startNot()
-     */
     @Override
     public void startNot() throws MQLException {
         startElement("not");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#endNot()
-     */
     @Override
     public void endNot() throws MQLException {
         endElement("not");
     }
 
+    @Override
     public void variable(String name) throws MQLException {
         emptyElement("variable", "name", name);
     }

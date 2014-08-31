@@ -385,4 +385,46 @@ public class LoggingTologHandler extends DelegatingTologHandler {
         super.endNot();
     }
 
+    @Override
+    public void subjectIdentifier(String iri) throws MQLException {
+        _LOG.info("subjectIdentifier iri='{}'", iri);
+        super.subjectIdentifier(iri);
+    }
+
+    @Override
+    public void subjectLocator(String iri) throws MQLException {
+        _LOG.info("subjectLocator iri='{}'", iri);
+        super.subjectLocator(iri);
+    }
+
+    @Override
+    public void itemIdentifier(String iri) throws MQLException {
+        _LOG.info("itemIdentifier iri='{}'", iri);
+        super.itemIdentifier(iri);
+    }
+
+    @Override
+    public void objectId(String ident) throws MQLException {
+        _LOG.info("objectId ident='{}'", ident);
+        super.objectId(ident);
+    }
+
+    @Override
+    public void string(String val) throws MQLException {
+        _LOG.info("string value='{}'", val);
+        super.string(val);
+    }
+
+    @Override
+    public void parameter(String name) throws MQLException {
+        _LOG.info("parameter name='{}'", name);
+        super.parameter(name);
+    }
+
+    @Override
+    public void iri(String iri) throws MQLException {
+        _LOG.info("iri value='{}'", iri);
+        super.iri(iri);
+    }
+
 }

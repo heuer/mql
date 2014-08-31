@@ -1,16 +1,18 @@
 /**
  * 
  */
-package com.semagia.mql.tolog;
+package com.semagia.mql.tolog.helpers;
 
 import org.xml.sax.ContentHandler;
 
 import com.semagia.mql.MQLException;
 import com.semagia.mql.base.AbstractSAXEmittingQueryHandler;
+import com.semagia.mql.tolog.ITologHandler;
 
 /**
- * @author lars
- *
+ * {@link ITologHandler} implementations which translates the events into SAX events.
+ * 
+ * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
 public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler implements
         ITologHandler {
@@ -21,11 +23,19 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
         super(handler, TOLOG_NS);
     }
 
-    @Override
-    public void namespace(String ident, String iri, int kind)
-            throws MQLException {
-        // TODO Auto-generated method stub
+    private static String prefixKindToString(final int kind) throws MQLException {
+        switch (kind) {
+            case PREFIX_KIND_SUBJECT_IDENTIFIER: return "subject-identifier";
+            case PREFIX_KIND_SUBJECT_LOCATOR: return "subject-locator";
+            case PREFIX_KIND_ITEM_IDENTIFIER: return "item-identifier";
+            case PREFIX_KIND_MODULE: return "module";
+        }
+        throw new MQLException("Unknown prefix kind '" + kind + "'");
+    }
 
+    @Override
+    public void namespace(String prefix, String iri, int kind) throws MQLException {
+        super.emptyElement("namespace", new String[][]{{"prefix", prefix}, {"iri", iri}, {"kind", prefixKindToString(kind)}});
     }
 
     @Override
@@ -113,49 +123,31 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
         super.emptyElement("qname", new String[][]{{"prefix", prefix}, {"localpart", localPart}});
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.tolog.ITologHandler#startName()
-     */
     @Override
     public void startName() throws MQLException {
         super.startElement("name");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.tolog.ITologHandler#endName()
-     */
     @Override
     public void endName() throws MQLException {
         super.endElement("name");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.tolog.ITologHandler#startDynamicPredicate()
-     */
     @Override
     public void startDynamicPredicate() throws MQLException {
         super.startElement("dynamic-predicate");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.tolog.ITologHandler#endDynamicPredicate()
-     */
     @Override
     public void endDynamicPredicate() throws MQLException {
         super.endElement("dynamic-predicate");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.tolog.ITologHandler#startPredicate()
-     */
     @Override
     public void startPredicate() throws MQLException {
         super.startElement("predicate");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.tolog.ITologHandler#endPredicate()
-     */
     @Override
     public void endPredicate() throws MQLException {
         super.endElement("predicate");
@@ -189,6 +181,41 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
     @Override
     public void endPlayer() throws MQLException {
         super.endElement("player");
+    }
+
+    @Override
+    public void subjectIdentifier(String iri) throws MQLException {
+        super.emptyElement("subject-identifier", "value", iri);
+    }
+
+    @Override
+    public void subjectLocator(String iri) throws MQLException {
+        super.emptyElement("subject-locator", "value", iri);
+    }
+
+    @Override
+    public void itemIdentifier(String iri) throws MQLException {
+        super.emptyElement("item-identifier", "value", iri);
+    }
+
+    @Override
+    public void objectId(String ident) throws MQLException {
+        super.emptyElement("object-id", "value", ident);
+    }
+
+    @Override
+    public void string(String val) throws MQLException {
+        super.emptyElement("string", "value", val);
+    }
+
+    @Override
+    public void parameter(String name) throws MQLException {
+        super.emptyElement("string", "name", name);
+    }
+
+    @Override
+    public void iri(String iri) throws MQLException {
+        super.emptyElement("iri", "value", iri);
     }
 
 }

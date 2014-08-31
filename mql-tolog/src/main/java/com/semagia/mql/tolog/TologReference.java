@@ -25,10 +25,13 @@ final class TologReference extends Ref {
         IID = IRef.ITEM_IDENTIFIER,
         SID = IRef.SUBJECT_IDENTIFIER,
         SLO = IRef.SUBJECT_LOCATOR,
+        IRI = SID,
         IDENT = 1000,
         VARIABLE = 1001,
         STRING = 1002,
-        QNAME = 1003;
+        QNAME = 1003,
+        OID = 1004,
+        PARAMETER = 1005;
 
     TologReference(String iri, int type) {
         super(iri, type);
@@ -38,12 +41,40 @@ final class TologReference extends Ref {
         return super.getIRI();
     }
 
+    final static TologReference createParameter(final String name) {
+        return new TologReference(name, PARAMETER);
+    }
+
     final static TologReference createVariable(final String name) {
         return new TologReference(name, VARIABLE);
     }
 
     final static TologReference createString(final String name) {
         return new TologReference(name, STRING);
+    }
+
+    public static TologReference createIdent(String name) {
+        return new TologReference(name, IDENT);
+    }
+
+    public static TologReference createIRI(String iri) {
+        return new TologReference(iri, IRI);
+    }
+
+    public static TologReference createSID(String iri) {
+        return new TologReference(iri, SID);
+    }
+
+    public static TologReference createSLO(String iri) {
+        return new TologReference(iri, SLO);
+    }
+
+    public static TologReference createOID(String ident) {
+        return new TologReference(ident, OID);
+    }
+
+    public static TologReference createIID(String iri) {
+        return new TologReference(iri, IID);
     }
 
 }

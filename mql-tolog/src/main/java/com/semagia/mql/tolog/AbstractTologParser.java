@@ -22,7 +22,7 @@ import com.semagia.mql.MQLException;
 import com.semagia.mql.tolog.helpers.DefaultTologHandler;
 
 /**
- * 
+ * Abstract helper class to avoid too much code within the RealTologParser.y grammar.
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
@@ -117,9 +117,8 @@ abstract class AbstractTologParser {
 
     private void issueArgumentEvents() throws MQLException {
         for (int i=0; i<_predClause.arguments.length; i++) {
-            
+            issueEvent(_predClause.arguments[i]);
         }
-        
     }
 
     protected final void issueNameEvent(final TologReference name) throws MQLException {
@@ -128,17 +127,29 @@ abstract class AbstractTologParser {
         _handler.endName();
     }
 
-    public void handleInfixPredicate(String name, TologReference lhs, TologReference rhs) throws MQLException {
+    public void handleInfixPredicate(final String name, final TologReference lhs, final TologReference rhs) throws MQLException {
         _handler.startInfixPredicate(name);
         issueEvent(lhs);
         issueEvent(rhs);
         _handler.endInfixPredicate();
     }
 
+    private final void issueEvent(final TologReference ref, boolean convertStringToIRI) throws MQLException {
+        final String val = ref.getValue();
+        switch (ref.getType()) {
+            case TologReference.VARIABLE: _handler.variable(val); break;
+            case TologReference.SID: _handler.subjectIdentifier(val); break;
+            case TologReference.SLO: _handler.subjectLocator(val); break;
+            case TologReference.IID: _handler.itemIdentifier(val); break;
+            case TologReference.OID: _handler.objectId(val); break;
+            case TologReference.STRING: if (convertStringToIRI) { _handler.iri(val); } else { _handler.string(val); } break;
+            case TologReference.PARAMETER: _handler.parameter(val); break;
+            case TologReference.IDENT: _handler.itemIdentifier("#" + val); break;
+        }
+    }
 
-    protected final void issueEvent(TologReference ref) throws MQLException {
-        // TODO Auto-generated method stub
-        
+    private final void issueEvent(final TologReference ref) throws MQLException {
+        issueEvent(ref, false);
     }
 
     protected void registerNamespace(String ident, String iri, int kind) throws MQLException {
