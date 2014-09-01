@@ -87,4 +87,8 @@ final class TologReference extends Ref {
         return new TologReference(val, DECIMAL);
     }
 
+    public static TologReference createQName(String val) {
+        return new TologReference(val, QNAME);
+    }
+
 }

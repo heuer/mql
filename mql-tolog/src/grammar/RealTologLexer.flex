@@ -104,7 +104,7 @@ Decimal         = ("-" | "+")? ( [0-9]+ \. [0-9]+ | \. ([0-9])+ )
 CTMComment      = ("#(" ([^)]* [^#])*  ")#") | "#"[^(][^\r\n]*
 CTMString       = (\"([^\\\"]|(\\[\\\"rntuU]))*\")|\"{3} ~\"{3} 
 
-%xstates TM_CONTENT, IGNORE, COMMENT
+%xstates TM_CONTENT, IGNORE, COMMENT, OPTION_KEY, OPTION_VALUE
 
 %%
 
@@ -196,7 +196,20 @@ CTMString       = (\"([^\\\"]|(\\[\\\"rntuU]))*\")|\"{3} ~\"{3}
 <COMMENT> {
     "/*"                { _commentCount++; }
     "*/"                { _commentCount--; if (_commentCount == 0) { yybegin(YYINITIAL); } }
+    "#OPTION:"          { yybegin(OPTION_KEY); }
     [^]                 { /* noop */ }
 }
+
+<OPTION_KEY> {
+    {Whitespace}        { /* noop */ }
+    [-A-Za-z0-9_\.]+    { return _token(TokenTypes.OPT_KEY); }
+    "="                 { yybegin(OPTION_VALUE); return _token(TokenTypes.EQ); }
+}
+
+<OPTION_VALUE> {
+    {Whitespace}        { /* noop */ }
+    [-A-Za-z0-9_\.]+    { yybegin(COMMENT); return _token(TokenTypes.OPT_VALUE); }
+}
+
 
 .|\n                    { throw new MQLParseException("Illegal character <" + yytext() + "> at line " + getLine() + " column: " + getColumn(), getLine(), getColumn()); }

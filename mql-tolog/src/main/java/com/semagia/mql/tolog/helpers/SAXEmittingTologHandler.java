@@ -34,6 +34,11 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
     }
 
     @Override
+    public void option(String key, String value) throws MQLException {
+        super.emptyElement("option", new String[][] {{"key", key}, {"value", value}});
+    }
+
+    @Override
     public void namespace(String prefix, String iri, int kind) throws MQLException {
         super.emptyElement("namespace", new String[][]{{"prefix", prefix}, {"iri", iri}, {"kind", prefixKindToString(kind)}});
     }
@@ -134,13 +139,13 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
     }
 
     @Override
-    public void startDynamicPredicate() throws MQLException {
-        super.startElement("dynamic-predicate");
+    public void startOccurrencePredicate() throws MQLException {
+        super.startElement("occurrence-predicate");
     }
 
     @Override
-    public void endDynamicPredicate() throws MQLException {
-        super.endElement("dynamic-predicate");
+    public void endOccurrencePredicate() throws MQLException {
+        super.endElement("occurrence-predicate");
     }
 
     @Override
@@ -216,6 +221,16 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
     @Override
     public void iri(String iri) throws MQLException {
         super.emptyElement("iri", "value", iri);
+    }
+
+    @Override
+    public void integer(Integer val) throws MQLException {
+        super.emptyElement("integer", "value", val.toString());
+    }
+
+    @Override
+    public void decimal(Float val) throws MQLException {
+        super.emptyElement("decimal", "value", val.toString());
     }
 
 }

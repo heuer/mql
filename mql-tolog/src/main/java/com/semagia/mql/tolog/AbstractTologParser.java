@@ -81,22 +81,21 @@ abstract class AbstractTologParser {
         }
         else {
             if (isIdent && _predClause.arguments.length == 2 && !_isRule(name)) {
-                _handler.startDynamicPredicate();
+                _handler.startOccurrencePredicate();
                 issueNameEvent(_predClause.ref);
                 issueArgumentEvents();
-                _handler.endDynamicPredicate();
+                _handler.endOccurrencePredicate();
                 handled = true;
             }
-            else if (kind == TologReference.QNAME){
-                final PrefixBinding binding = _prefixes.get(name);
-                if (binding == null) {
-                    throw new MQLException("Unknown prefix '" + name + "'");
-                }
+            else if (kind == TologReference.QNAME) {
+                final int colonIdx = name.indexOf(':');
+                final String prefix = name.substring(0, colonIdx);
+                final PrefixBinding binding = resolveQName(prefix);
                 if (binding.kind != ITologHandler.PREFIX_KIND_MODULE) {
-                    _handler.startDynamicPredicate();
+                    _handler.startOccurrencePredicate();
                     issueNameEvent(_predClause.ref);
                     issueArgumentEvents();
-                    _handler.endDynamicPredicate();
+                    _handler.endOccurrencePredicate();
                     handled = true;
                 }
             }
@@ -143,13 +142,34 @@ abstract class AbstractTologParser {
             case TologReference.STRING: if (convertStringToIRI) { _handler.iri(val); } else { _handler.string(val); } break;
             case TologReference.PARAMETER: _handler.parameter(val); break;
             case TologReference.IDENT: _handler.itemIdentifier("#" + val); break;
+            case TologReference.DECIMAL: _handler.decimal(Float.valueOf(val)); break;
+            case TologReference.INTEGER: _handler.integer(Integer.valueOf(val)); break;
+            case TologReference.QNAME: { final int colonIdx = val.indexOf(':'); 
+                                         final String prefix = val.substring(0, colonIdx);
+                                         final String lp = val.substring(colonIdx+1);
+                                         final PrefixBinding binding = resolveQName(prefix);
+                                         _handler.qname(binding.kind, prefix, lp);
+                                         break;
+                                        }
         }
     }
 
-    protected void registerNamespace(String ident, String iri, int kind) throws MQLException {
+    private PrefixBinding resolveQName(final String prefix) throws MQLException {
+        final PrefixBinding binding = _prefixes.get(prefix);
+        if (binding == null) {
+            throw new MQLException("Unknown prefix '"  + prefix + "'");
+        }
+        return binding;
+    }
+
+    protected void importModule(final String iri, final String prefix) throws MQLException {
+        registerNamespace(prefix, iri, ITologHandler.PREFIX_KIND_MODULE);
+    }
+
+    protected void registerNamespace(final String prefix, final String iri, final int kind) throws MQLException {
         //TODO: Check if exists
-        _prefixes.put(ident, new PrefixBinding(iri, kind));
-        _handler.namespace(ident, iri, kind);
+        _prefixes.put(prefix, new PrefixBinding(iri, kind));
+        _handler.namespace(prefix, iri, kind);
     }
 
     public void handlePair(TologReference type, TologReference player) throws MQLException {

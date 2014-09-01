@@ -38,6 +38,12 @@ public class LoggingTologHandler extends DelegatingTologHandler {
     }
 
     @Override
+    public void option(String key, String value) throws MQLException {
+        _LOG.info("option key='{}' value='{}'", key, value);
+        super.option(key, value);
+    }
+
+    @Override
     public void start() throws MQLException {
         _LOG.info("start");
         super.start();
@@ -218,9 +224,9 @@ public class LoggingTologHandler extends DelegatingTologHandler {
     }
 
     @Override
-    public void startDynamicPredicate() throws MQLException {
-        _LOG.info("startDynamicPredicate");
-        super.startDynamicPredicate();
+    public void startOccurrencePredicate() throws MQLException {
+        _LOG.info("startOccurrencePredicate");
+        super.startOccurrencePredicate();
     }
 
     @Override
@@ -230,9 +236,9 @@ public class LoggingTologHandler extends DelegatingTologHandler {
     }
 
     @Override
-    public void endDynamicPredicate() throws MQLException {
-        _LOG.info("endDynamicPredicate");
-        super.endDynamicPredicate();
+    public void endOccurrencePredicate() throws MQLException {
+        _LOG.info("endOccurrencePredicate");
+        super.endOccurrencePredicate();
     }
 
     @Override
@@ -425,6 +431,18 @@ public class LoggingTologHandler extends DelegatingTologHandler {
     public void iri(String iri) throws MQLException {
         _LOG.info("iri value='{}'", iri);
         super.iri(iri);
+    }
+
+    @Override
+    public void integer(Integer val) throws MQLException {
+        _LOG.info("integer value='{}'", val);
+        super.integer(val);
+    }
+
+    @Override
+    public void decimal(Float val) throws MQLException {
+        _LOG.info("decimal value='{}'", val);
+        super.decimal(val);
     }
 
 }

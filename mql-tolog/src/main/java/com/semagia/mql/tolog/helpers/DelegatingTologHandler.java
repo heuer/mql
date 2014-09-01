@@ -39,6 +39,11 @@ public class DelegatingTologHandler implements ITologHandler {
     }
 
     @Override
+    public void option(String key, String value) throws MQLException {
+        _handler.option(key, value);
+    }
+
+    @Override
     public void start() throws MQLException {
         _handler.start();
     }
@@ -186,8 +191,8 @@ public class DelegatingTologHandler implements ITologHandler {
     }
 
     @Override
-    public void startDynamicPredicate() throws MQLException {
-        _handler.startDynamicPredicate();
+    public void startOccurrencePredicate() throws MQLException {
+        _handler.startOccurrencePredicate();
     }
 
     @Override
@@ -196,8 +201,8 @@ public class DelegatingTologHandler implements ITologHandler {
     }
 
     @Override
-    public void endDynamicPredicate() throws MQLException {
-        _handler.endDynamicPredicate();
+    public void endOccurrencePredicate() throws MQLException {
+        _handler.endOccurrencePredicate();
     }
 
     @Override
@@ -358,6 +363,16 @@ public class DelegatingTologHandler implements ITologHandler {
     @Override
     public void iri(String iri) throws MQLException {
         _handler.iri(iri);
+    }
+
+    @Override
+    public void integer(Integer val) throws MQLException {
+        _handler.integer(val);
+    }
+
+    @Override
+    public void decimal(Float val) throws MQLException {
+        _handler.decimal(val);
     }
 
 }

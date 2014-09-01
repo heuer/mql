@@ -26,6 +26,9 @@ import com.semagia.mql.tolog.ITologHandler;
 public class DefaultTologHandler implements ITologHandler {
 
     @Override
+    public void option(String key, String value) throws MQLException { }
+
+    @Override
     public void start() throws MQLException { }
 
     @Override
@@ -169,10 +172,10 @@ public class DefaultTologHandler implements ITologHandler {
     public void endName() throws MQLException { }
 
     @Override
-    public void startDynamicPredicate() throws MQLException { }
+    public void startOccurrencePredicate() throws MQLException { }
 
     @Override
-    public void endDynamicPredicate() throws MQLException { }
+    public void endOccurrencePredicate() throws MQLException { }
 
     @Override
     public void startPredicate() throws MQLException { }
@@ -218,5 +221,11 @@ public class DefaultTologHandler implements ITologHandler {
 
     @Override
     public void iri(String iri) throws MQLException { }
+
+    @Override
+    public void integer(Integer val) throws MQLException { }
+
+    @Override
+    public void decimal(Float val) throws MQLException { }
 
 }

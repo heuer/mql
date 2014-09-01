@@ -51,6 +51,8 @@ class RealTologParser extends AbstractTologParser {
     IMPLIES, DOT,
 
     STRING, DATE, DATE_TIME, INTEGER, DECIMAL, IRI,
+    
+    OPT_KEY, OPT_VALUE
 
     TM_FRAGMENT
 
@@ -61,26 +63,27 @@ class RealTologParser extends AbstractTologParser {
     SLO
     SID
     IID
+    QNAME
     INTEGER
     DECIMAL
     PARAMETER
     STRING
     VARIABLE
     TM_FRAGMENT
+    OPT_KEY
+    OPT_VALUE
 
 %type <TologReference>
-    ref, qname, qiri, expr,
-    uri_ref, variable, value, parameter,
-    string
+    ref, qiri, expr, uri_ref, variable, value, parameter, string
 
 %type <List<TologReference>>
     arguments
 
 %%
 
-instance    : head
-            | head statement
-            | statement
+instance    : opt_options head
+            | opt_options head statement
+            | opt_options statement
             ;
 
 head        : rule
@@ -88,6 +91,15 @@ head        : rule
             | head directive
             | head rule
             ;
+
+opt_options : 
+            | options
+            ;
+
+options     : OPT_KEY EQ OPT_VALUE          { _handler.option($1, $3); }
+            ;
+
+
 
 directive   : using_directive
             | import_directive
@@ -99,7 +111,7 @@ using_directive
 
 import_directive 
             : KW_IMPORT qiri KW_AS IDENT
-            | KW_IMPORT STRING KW_AS IDENT
+            | KW_IMPORT STRING KW_AS IDENT  { super.importModule($2, $4); }
             ;
 
 statement   : select_query
@@ -126,12 +138,8 @@ select_elements
             ;
 
 select_element  
-            : count_clause
-            | variable
-            ;
-
-count_clause
             : KW_COUNT LPAREN VARIABLE RPAREN { _handler.count($3); }
+            | VARIABLE                        { _handler.variable($1); }
             ;
 
 order_clause
@@ -250,13 +258,7 @@ uri_ref     : SID                           { $$ = TologReference.createSID($1);
             ;
 
 qiri        : IRI                           { $$ = TologReference.createIRI($1); }
-            | qname                         { $$ = $1; }
-            ;
-
-qname       : QNAME                         { }
-            ;
-
-variable    : VARIABLE                      { $$ = TologReference.createVariable($1); }
+            | QNAME                         { $$ = TologReference.createQName($1); }
             ;
 
 clauselist  : clause

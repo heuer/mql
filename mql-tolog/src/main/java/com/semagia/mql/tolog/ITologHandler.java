@@ -30,7 +30,9 @@ public interface ITologHandler extends IQueryHandler {
                      PREFIX_KIND_SUBJECT_LOCATOR = IRef.SUBJECT_LOCATOR,
                      PREFIX_KIND_ITEM_IDENTIFIER = IRef.ITEM_IDENTIFIER,
                      PREFIX_KIND_MODULE = -1001;
-            
+
+
+    void option(String key, String value) throws MQLException;
 
     void namespace(String prefix, String iri, int kind) throws MQLException;
 
@@ -70,9 +72,9 @@ public interface ITologHandler extends IQueryHandler {
 
     void endName() throws MQLException;
 
-    void startDynamicPredicate() throws MQLException;
+    void startOccurrencePredicate() throws MQLException;
 
-    void endDynamicPredicate() throws MQLException;
+    void endOccurrencePredicate() throws MQLException;
 
     void startPredicate() throws MQLException;
 
@@ -103,5 +105,10 @@ public interface ITologHandler extends IQueryHandler {
     void parameter(String name) throws MQLException;
 
     void iri(String iri) throws MQLException;
+
+    void integer(Integer val) throws MQLException;
+
+    //TODO: BigDecimal?!?
+    void decimal(Float val) throws MQLException;
 
 }

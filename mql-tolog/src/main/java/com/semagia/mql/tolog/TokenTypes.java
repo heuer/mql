@@ -88,7 +88,10 @@ final class TokenTypes {
         DATE = TologParser.DATE,
         DATE_TIME = TologParser.DATE_TIME,
         
-        TM_FRAGMENT = TologParser.TM_FRAGMENT
+        TM_FRAGMENT = TologParser.TM_FRAGMENT,
+        
+        OPT_KEY = TologParser.OPT_KEY,
+        OPT_VALUE = TologParser.OPT_VALUE
         ;
 
     /**
@@ -169,6 +172,9 @@ final class TokenTypes {
             case DATE_TIME:     return "<dateTime>";
             
             case TM_FRAGMENT:   return "<tm-fragment>";
+            
+            case OPT_KEY:       return "<opt-key>";
+            case OPT_VALUE:     return "<opt-value>";
         }
         throw new RuntimeException("Unknown token type '" + type + "'");
     }
