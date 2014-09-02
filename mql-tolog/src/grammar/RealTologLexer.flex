@@ -96,7 +96,8 @@ OID             = "@"{IdentifierChar}+
 
 String          = \"([^\"]|\"\")*\"
 //IRI             = "<"[^<>\"\{\}\`\\ ]+">"
-Integer         = ("-" | "+")? [0-9]+
+PositiveInteger = [0-9]+
+Integer         = ("-" | "+")? {PositiveInteger}
 Decimal         = ("-" | "+")? ( [0-9]+ \. [0-9]+ | \. ([0-9])+ )
  
 
@@ -173,6 +174,7 @@ CTMString       = (\"([^\\\"]|(\\[\\\"rntuU]))*\")|\"{3} ~\"{3}
     // Datatypes
     {String}            { return _token(TokenTypes.STRING, 1, 1); }
 //    {IRI}               { return _token(TokenTypes.IRI, 1, 1); }
+    {PositiveInteger}   { return _token(TokenTypes.POSITIVE_INTEGER); }
     {Integer}           { return _token(TokenTypes.INTEGER); }
     {Decimal}           { return _token(TokenTypes.DECIMAL); }
 

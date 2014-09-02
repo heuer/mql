@@ -65,6 +65,7 @@ class RealTologParser extends AbstractTologParser {
     IID
     QNAME
     INTEGER
+    POSITIVE_INTEGER
     DECIMAL
     PARAMETER
     STRING
@@ -74,7 +75,7 @@ class RealTologParser extends AbstractTologParser {
     OPT_VALUE
 
 %type <TologReference>
-    ref, qiri, expr, uri_ref, variable, value, parameter, string
+    ref, qiri, expr, uri_ref, variable, value, parameter, string, param
 
 %type <List<TologReference>>
     arguments
@@ -155,13 +156,14 @@ order_element
 
 limit_offset    
             : KW_OFFSET                     { _handler.startPagination(); } 
-              INTEGER                       { _handler.offset(Integer.parseInt($3)); _handler.endPagination(); }
+              POSITIVE_INTEGER              { _handler.offset(Integer.parseInt($3)); _handler.endPagination(); }
             | KW_LIMIT                      { _handler.startPagination(); } 
-              INTEGER                       { _handler.limit(Integer.parseInt($3)); }
+              POSITIVE_INTEGER              { _handler.limit(Integer.parseInt($3)); }
               opt_offset                    { _handler.endPagination(); }
             ;
 
-opt_offset  : KW_OFFSET INTEGER             { _handler.offset(Integer.parseInt($2)); }
+opt_offset  : 
+            | KW_OFFSET POSITIVE_INTEGER    { _handler.offset(Integer.parseInt($2)); }
             ;
 
 rule        : predclause IMPLIES            { super.handleRuleStart(); }
@@ -240,6 +242,7 @@ parameter   : PARAMETER                     { $$ = TologReference.createParamete
 
 value       : STRING                        { $$ = TologReference.createString($1); }
             | INTEGER                       { $$ = TologReference.createInteger($1); }
+            | POSITIVE_INTEGER              { $$ = TologReference.createInteger($1); }
             | DECIMAL                       { $$ = TologReference.createDecimal($1); }
             ;
 
@@ -275,8 +278,8 @@ delete_element
             | paramlist
             ;
 
-paramlist   : param
-            | paramlist COMMA param
+paramlist   : param                         { super.issueEvent($1); }
+            | paramlist COMMA param         { super.issueEvent($3); }
 
 opt_where_clause 
             : 
@@ -311,6 +314,7 @@ function_call
 param       : string                        { $$ = $1; }
             | variable                      { $$ = $1; }
             | ref                           { $$ = $1; }
+            | parameter                     { $$ = $1; }
             ;
 
 insert      : KW_INSERT                     { _handler.startInsert(); } 
@@ -324,8 +328,8 @@ insert      : KW_INSERT                     { _handler.startInsert(); }
               opt_where_clause              { _handler.endInsert(); }
             ;
 
-update      : KW_UPDATE                     { _handler.startUpdate(); } 
-              function_call where_clause    { _handler.endUpdate(); }
+update      : KW_UPDATE                      { _handler.startUpdate(); } 
+              function_call opt_where_clause { _handler.endUpdate(); }
             ;
 
 merge       : KW_MERGE                      { _handler.startMerge(); }
@@ -333,8 +337,9 @@ merge       : KW_MERGE                      { _handler.startMerge(); }
               opt_where_clause              { _handler.endMerge(); }
             ;
 
-literal     : variable                      { $$ = $1; }
-            | ref                           { $$ = $1; }
+literal     : variable                      { super.issueEvent($1); }
+            | ref                           { super.issueEvent($1); }
+            | PARAMETER                     { super.issueEvent(TologReference.createParameter($1)); }
             ;
 
 where_clause

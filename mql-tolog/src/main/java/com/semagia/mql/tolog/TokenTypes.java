@@ -83,6 +83,7 @@ final class TokenTypes {
         // Datatypes
         STRING = TologParser.STRING,
         IRI = TologParser.IRI,
+        POSITIVE_INTEGER = TologParser.POSITIVE_INTEGER,
         INTEGER = TologParser.INTEGER,
         DECIMAL = TologParser.DECIMAL,
         DATE = TologParser.DATE,
@@ -166,6 +167,7 @@ final class TokenTypes {
             // Datatypes
             case STRING:        return "<string>";
             case IRI:           return "<iri>";
+            case POSITIVE_INTEGER: return "<positive-integer>";
             case INTEGER:       return "<integer>";
             case DECIMAL:       return "<decimal>";
             case DATE:          return "<date>";

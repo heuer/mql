@@ -70,7 +70,7 @@ public class LoggingTologHandler extends DelegatingTologHandler {
 
     @Override
     public void startFunctionCall(String name) throws MQLException {
-        _LOG.info("startFunctionCall");
+        _LOG.info("startFunctionCall name='{}'", name);
         super.startFunctionCall(name);
     }
 

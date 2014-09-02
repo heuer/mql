@@ -15,7 +15,9 @@
  */
 package com.semagia.mql.tolog;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.semagia.mql.MQLException;
@@ -33,11 +35,13 @@ abstract class AbstractTologParser {
     protected ITologHandler _handler;
     protected final PredicateClause _predClause;
     private final Map<String, PrefixBinding> _prefixes;
+    private final List<String> _ruleNames;
 
     protected AbstractTologParser() {
         setHandler(_DEFAULT_HANDLER);
         _predClause = new PredicateClause();
         _prefixes = new HashMap<String, PrefixBinding>();
+        _ruleNames = new ArrayList<String>();
     }
 
     public ITologHandler getHandler() {
@@ -53,7 +57,7 @@ abstract class AbstractTologParser {
     }
 
     private boolean _isRule(String name) {
-        return false;
+        return _ruleNames.contains(name);
     }
 
     protected final void handleRuleStart() throws MQLException {
@@ -64,7 +68,9 @@ abstract class AbstractTologParser {
             }
             variables[i] = _predClause.arguments[i].getValue();
         }
-        _handler.startRule(_predClause.ref.getValue(), variables);
+        final String name = _predClause.ref.getValue();
+        _handler.startRule(name, variables);
+        _ruleNames.add(name);
     }
 
     protected final void handlePredicateClause() throws MQLException {
@@ -127,7 +133,7 @@ abstract class AbstractTologParser {
         _handler.endInfixPredicate();
     }
 
-    private final void issueEvent(final TologReference ref) throws MQLException {
+    protected final void issueEvent(final TologReference ref) throws MQLException {
         issueEvent(ref, false);
     }
 
