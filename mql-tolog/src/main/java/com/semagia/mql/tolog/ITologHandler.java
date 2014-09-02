@@ -36,9 +36,13 @@ public interface ITologHandler extends IQueryHandler {
 
     void namespace(String prefix, String iri, int kind) throws MQLException;
 
-    void startFunctionCall(String name) throws MQLException;
+    void startFunctionInvocation(String name) throws MQLException;
 
-    void endFunctionCall() throws MQLException;
+    void endFunctionInvocation() throws MQLException;
+
+    void startRuleInvocation() throws MQLException;
+
+    void endRuleInvocation() throws MQLException;
 
     void startMerge() throws MQLException;
 

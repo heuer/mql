@@ -44,13 +44,23 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
     }
 
     @Override
-    public void startFunctionCall(String name) throws MQLException {
-        super.startElement("function-call", "name", name);
+    public void startFunctionInvocation(String name) throws MQLException {
+        super.startElement("function-invocation", "name", name);
     }
 
     @Override
-    public void endFunctionCall() throws MQLException {
-        super.endElement("function-call");
+    public void endFunctionInvocation() throws MQLException {
+        super.endElement("function-invocation");
+    }
+
+    @Override
+    public void startRuleInvocation() throws MQLException {
+        super.startElement("rule-invocation");
+    }
+
+    @Override
+    public void endRuleInvocation() throws MQLException {
+        super.endElement("rule-invocation");
     }
 
     @Override

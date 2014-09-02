@@ -65,8 +65,8 @@ public class DelegatingTologHandler implements ITologHandler {
     }
 
     @Override
-    public void startFunctionCall(String name) throws MQLException {
-        _handler.startFunctionCall(name);
+    public void startFunctionInvocation(String name) throws MQLException {
+        _handler.startFunctionInvocation(name);
     }
 
     @Override
@@ -75,8 +75,18 @@ public class DelegatingTologHandler implements ITologHandler {
     }
 
     @Override
-    public void endFunctionCall() throws MQLException {
-        _handler.endFunctionCall();
+    public void endFunctionInvocation() throws MQLException {
+        _handler.endFunctionInvocation();
+    }
+
+    @Override
+    public void startRuleInvocation() throws MQLException {
+        _handler.startRuleInvocation();
+    }
+
+    @Override
+    public void endRuleInvocation() throws MQLException {
+        _handler.endRuleInvocation();
     }
 
     @Override

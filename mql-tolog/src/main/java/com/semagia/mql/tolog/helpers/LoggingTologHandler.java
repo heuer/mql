@@ -69,9 +69,9 @@ public class LoggingTologHandler extends DelegatingTologHandler {
     }
 
     @Override
-    public void startFunctionCall(String name) throws MQLException {
-        _LOG.info("startFunctionCall name='{}'", name);
-        super.startFunctionCall(name);
+    public void startFunctionInvocation(String name) throws MQLException {
+        _LOG.info("startFunctionInvocation name='{}'", name);
+        super.startFunctionInvocation(name);
     }
 
     @Override
@@ -81,9 +81,21 @@ public class LoggingTologHandler extends DelegatingTologHandler {
     }
 
     @Override
-    public void endFunctionCall() throws MQLException {
-        _LOG.info("endFunctionCall");
-        super.endFunctionCall();
+    public void endFunctionInvocation() throws MQLException {
+        _LOG.info("endFunctionInvocation");
+        super.endFunctionInvocation();
+    }
+
+    @Override
+    public void startRuleInvocation() throws MQLException {
+        _LOG.info("startRuleInvocation");
+        super.startRuleInvocation();
+    }
+
+    @Override
+    public void endRuleInvocation() throws MQLException {
+        _LOG.info("endRuleInvocation");
+        super.endRuleInvocation();
     }
 
     @Override

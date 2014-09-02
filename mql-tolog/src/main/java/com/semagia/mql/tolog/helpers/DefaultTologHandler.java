@@ -114,10 +114,16 @@ public class DefaultTologHandler implements ITologHandler {
             throws MQLException { }
 
     @Override
-    public void startFunctionCall(String name) throws MQLException { }
+    public void startFunctionInvocation(String name) throws MQLException { }
 
     @Override
-    public void endFunctionCall() throws MQLException { }
+    public void endFunctionInvocation() throws MQLException { }
+
+    @Override
+    public void startRuleInvocation() throws MQLException { }
+
+    @Override
+    public void endRuleInvocation() throws MQLException { }
 
     @Override
     public void startMerge() throws MQLException { }
