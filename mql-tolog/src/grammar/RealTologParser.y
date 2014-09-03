@@ -172,6 +172,9 @@ rule        : predclause IMPLIES            { super.handleRuleStart(); }
 
 clause      : predclause                       { super.handlePredicateClause(); }
             | assoc_head opt_more_pairs RPAREN { _handler.endAssociationPredicate(); }
+            | opclause
+            | orclause
+            | notclause
             ;
 
 assoc_head  : ref LPAREN expr COLON ref     { _handler.startAssociationPredicate(); super.issueNameEvent($1); super.handlePair($5, $3); }
@@ -268,11 +271,6 @@ clauselist  : clause
             | clauselist COMMA clause
             ;
 
-clause      : opclause
-            | orclause
-            | notclause
-            ;
-
 delete_element  
             : function_call
             | paramlist
@@ -307,8 +305,8 @@ delete      : KW_DELETE                       { _handler.startDelete(); }
             ;
 
 function_call   
-            : IDENT LPAREN                  { _handler.startFunctionCall($1); }
-              paramlist RPAREN              { _handler.endFunctionCall(); }
+            : IDENT LPAREN                  { _handler.startFunctionInvocation($1); }
+              paramlist RPAREN              { _handler.endFunctionInvocation(); }
             ;
 
 param       : string                        { $$ = $1; }
