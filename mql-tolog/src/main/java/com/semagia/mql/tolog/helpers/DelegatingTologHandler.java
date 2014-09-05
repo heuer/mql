@@ -385,4 +385,19 @@ public class DelegatingTologHandler implements ITologHandler {
         _handler.decimal(val);
     }
 
+    @Override
+    public void startRules() throws MQLException {
+        _handler.startRules();
+    }
+
+    @Override
+    public void endRules() throws MQLException {
+        _handler.endRules();
+    }
+
+    @Override
+    public void identifier(String name) throws MQLException {
+        _handler.identifier(name);
+    }
+
 }

@@ -234,4 +234,13 @@ public class DefaultTologHandler implements ITologHandler {
     @Override
     public void decimal(Float val) throws MQLException { }
 
+    @Override
+    public void startRules() throws MQLException { }
+
+    @Override
+    public void endRules() throws MQLException { }
+
+    @Override
+    public void identifier(String name) throws MQLException { }
+
 }

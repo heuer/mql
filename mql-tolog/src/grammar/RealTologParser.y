@@ -167,7 +167,7 @@ opt_offset  :
             ;
 
 rule        : predclause IMPLIES            { super.handleRuleStart(); }
-              clauselist DOT                { _handler.endRule(); }
+              clauselist DOT                { super._inRule = false; _handler.endRule(); }
             ;
 
 clause      : predclause                       { super.handlePredicateClause(); }
@@ -288,6 +288,7 @@ opt_tail    :
             ;
 
 tail        : order_clause opt_limit_offset
+            | limit_offset
             ;
 
 order_elements

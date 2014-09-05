@@ -243,4 +243,19 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
         super.emptyElement("decimal", "value", val.toString());
     }
 
+    @Override
+    public void startRules() throws MQLException {
+        super.startElement("rules");
+    }
+
+    @Override
+    public void endRules() throws MQLException {
+        super.endElement("rules");
+    }
+
+    @Override
+    public void identifier(String name) throws MQLException {
+        super.emptyElement("identifier", "name", name);
+    }
+
 }

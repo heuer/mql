@@ -457,4 +457,22 @@ public class LoggingTologHandler extends DelegatingTologHandler {
         super.decimal(val);
     }
 
+    @Override
+    public void startRules() throws MQLException {
+        _LOG.info("startRules");
+        super.startRules();
+    }
+
+    @Override
+    public void endRules() throws MQLException {
+        _LOG.info("endRules");
+        super.endRules();
+    }
+
+    @Override
+    public void identifier(String name) throws MQLException {
+        _LOG.info("identifier name='{}'", name);
+        super.identifier(name);
+    }
+
 }

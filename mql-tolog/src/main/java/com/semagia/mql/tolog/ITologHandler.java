@@ -115,4 +115,10 @@ public interface ITologHandler extends IQueryHandler {
     //TODO: BigDecimal?!?
     void decimal(Float val) throws MQLException;
 
+    void startRules() throws MQLException;
+
+    void endRules() throws MQLException;
+
+    void identifier(String name) throws MQLException;
+
 }
