@@ -37,7 +37,7 @@ abstract class AbstractTologParser {
     private final Map<String, PrefixBinding> _prefixes;
     private final List<String> _ruleNames;
     protected boolean _inRule;
-    protected boolean _seenRules;
+    protected boolean _issueEndOfRulesEvent;
 
     protected AbstractTologParser() {
         setHandler(_DEFAULT_HANDLER);
@@ -64,9 +64,9 @@ abstract class AbstractTologParser {
 
     protected final void handleRuleStart() throws MQLException {
         _inRule = true;
-        if (!_seenRules) {
+        if (!_issueEndOfRulesEvent) {
             _handler.startRules();
-            _seenRules = true;
+            _issueEndOfRulesEvent = true;
         }
         String[] variables = new String[_predClause.arguments.length];
         for (int i=0; i<variables.length; i++) {
@@ -191,13 +191,21 @@ abstract class AbstractTologParser {
     }
 
     protected void registerNamespace(final String prefix, final String iri, final int kind) throws MQLException {
-        addNamespace(prefix, iri, kind);
-        _handler.namespace(prefix, iri, kind);
+        if (addNamespace(prefix, iri, kind)) {
+            _handler.namespace(prefix, iri, kind);
+        }
     }
 
-    public void addNamespace(final String prefix, final String iri, final int kind) throws MQLException {
-        //TODO: Check if exists
+    public boolean addNamespace(final String prefix, final String iri, final int kind) throws MQLException {
+        final PrefixBinding existing = _prefixes.get(prefix);
+        if (existing != null) {
+            if (existing.iri.equals(iri) && existing.kind == kind) {
+                return false;
+            }
+            throw new MQLException("The prefix '" + prefix + "' is already bound to <" + existing.iri + ">");
+        }
         _prefixes.put(prefix, new PrefixBinding(iri, kind));
+        return true;
     }
 
     protected void handlePair(TologReference type, TologReference player) throws MQLException {
@@ -235,9 +243,9 @@ abstract class AbstractTologParser {
     }
 
     private void _handleEndOfRules() throws MQLException {
-        if (!_inRule && _seenRules) {
+        if (!_inRule && _issueEndOfRulesEvent) {
             _handler.endRules();
-            _seenRules = false;
+            _issueEndOfRulesEvent = false;
         }
     }
 
