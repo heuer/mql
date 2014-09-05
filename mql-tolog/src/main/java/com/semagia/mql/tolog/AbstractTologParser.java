@@ -36,6 +36,8 @@ abstract class AbstractTologParser {
     protected final PredicateClause _predClause;
     private final Map<String, PrefixBinding> _prefixes;
     private final List<String> _ruleNames;
+    protected boolean _inRule;
+    protected boolean _seenRules;
 
     protected AbstractTologParser() {
         setHandler(_DEFAULT_HANDLER);
@@ -61,6 +63,11 @@ abstract class AbstractTologParser {
     }
 
     protected final void handleRuleStart() throws MQLException {
+        _inRule = true;
+        if (!_seenRules) {
+            _handler.startRules();
+            _seenRules = true;
+        }
         String[] variables = new String[_predClause.arguments.length];
         for (int i=0; i<variables.length; i++) {
             if (_predClause.arguments[i].getType() != TologReference.VARIABLE) {
@@ -74,6 +81,7 @@ abstract class AbstractTologParser {
     }
 
     protected final void handlePredicateClause() throws MQLException {
+        _handleEndOfRules();
         final TologReference ref = _predClause.ref;
         final int kind = ref.getType();
         final String name = ref.getValue();
@@ -86,6 +94,15 @@ abstract class AbstractTologParser {
             handled = true;
         }
         else {
+            /*
+            if (_isRule(name)) {
+                _handler.startRuleInvocation();
+                issueNameEvent(_predClause.ref);
+                issueArgumentEvents();
+                _handler.endRuleInvocation();
+                handled = true;
+            }
+            */
             if (isIdent && _predClause.arguments.length == 2 && !_isRule(name)) {
                 _handler.startOccurrencePredicate();
                 issueNameEvent(_predClause.ref);
@@ -126,7 +143,8 @@ abstract class AbstractTologParser {
         _handler.endName();
     }
 
-    public void handleInfixPredicate(final String name, final TologReference lhs, final TologReference rhs) throws MQLException {
+    protected void handleInfixPredicate(final String name, final TologReference lhs, final TologReference rhs) throws MQLException {
+        _handleEndOfRules();
         _handler.startInfixPredicate(name);
         issueEvent(lhs);
         issueEvent(rhs);
@@ -147,7 +165,7 @@ abstract class AbstractTologParser {
             case TologReference.OID: _handler.objectId(val); break;
             case TologReference.STRING: if (convertStringToIRI) { _handler.iri(val); } else { _handler.string(val); } break;
             case TologReference.PARAMETER: _handler.parameter(val); break;
-            case TologReference.IDENT: _handler.itemIdentifier("#" + val); break;
+            case TologReference.IDENT: _handler.identifier(val); break;
             case TologReference.DECIMAL: _handler.decimal(Float.valueOf(val)); break;
             case TologReference.INTEGER: _handler.integer(Integer.valueOf(val)); break;
             case TologReference.QNAME: { final int colonIdx = val.indexOf(':'); 
@@ -173,12 +191,16 @@ abstract class AbstractTologParser {
     }
 
     protected void registerNamespace(final String prefix, final String iri, final int kind) throws MQLException {
-        //TODO: Check if exists
-        _prefixes.put(prefix, new PrefixBinding(iri, kind));
+        addNamespace(prefix, iri, kind);
         _handler.namespace(prefix, iri, kind);
     }
 
-    public void handlePair(TologReference type, TologReference player) throws MQLException {
+    public void addNamespace(final String prefix, final String iri, final int kind) throws MQLException {
+        //TODO: Check if exists
+        _prefixes.put(prefix, new PrefixBinding(iri, kind));
+    }
+
+    protected void handlePair(TologReference type, TologReference player) throws MQLException {
         _handler.startPair();
         _handler.startType();
         issueEvent(type);
@@ -187,6 +209,36 @@ abstract class AbstractTologParser {
         issueEvent(player);
         _handler.endPlayer();
         _handler.endPair();
+    }
+
+    protected void startAssociationPredicate(final TologReference assocType, final TologReference roleType, final TologReference rolePlayer) throws MQLException {
+        _handleEndOfRules();
+        _handler.startAssociationPredicate(); 
+        issueNameEvent(assocType); 
+        handlePair(roleType, rolePlayer);
+    }
+
+    protected void startNot() throws MQLException {
+        _handleEndOfRules();
+        _handler.startNot();
+    }
+
+    protected void startOr() throws MQLException {
+        _handleEndOfRules();
+        _handler.startOr();
+        _handler.startBranch(false);
+    }
+
+    protected void endOr() throws MQLException {
+        _handler.endBranch();
+        _handler.endOr();
+    }
+
+    private void _handleEndOfRules() throws MQLException {
+        if (!_inRule && _seenRules) {
+            _handler.endRules();
+            _seenRules = false;
+        }
     }
 
     protected final static class PredicateClause {
