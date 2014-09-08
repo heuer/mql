@@ -72,4 +72,5 @@ public final class TologParser extends RealTologParser implements ITologParser {
             return super.tokenToName(token);
         }
     }
+
 }
