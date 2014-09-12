@@ -128,7 +128,7 @@ clause_query
             ;
 
 select_query
-            : KW_SELECT                     { _handler.startSelect(); } 
+            : KW_SELECT                     { super._handleEndOfRules(); _handler.startSelect(); } 
               select_elements 
               where_clause opt_tail QM      { _handler.endSelect(); }
             ;
@@ -301,13 +301,13 @@ opt_limit_offset
             | limit_offset
             ;
 
-delete      : KW_DELETE                       { _handler.startDelete(); }
+delete      : KW_DELETE                       { super._handleEndOfRules(); _handler.startDelete(); }
               delete_element opt_where_clause { _handler.endDelete(); }
             ;
 
 function_call   
             : IDENT LPAREN                  { _handler.startFunctionInvocation($1); }
-              paramlist RPAREN              { _handler.endFunctionInvocation(); }
+              param COMMA param RPAREN      { super.issueEvent($4); super.issueEvent($6); _handler.endFunctionInvocation(); }
             ;
 
 param       : string                        { $$ = $1; }
@@ -316,7 +316,7 @@ param       : string                        { $$ = $1; }
             | parameter                     { $$ = $1; }
             ;
 
-insert      : KW_INSERT                     { _handler.startInsert(); } 
+insert      : KW_INSERT                     { super._handleEndOfRules(); _handler.startInsert(); } 
               TM_FRAGMENT                   { _handler.startFragment(); 
                                               final String content = $3;
                                               for (String var: CTMUtils.findVariables(content, true)) {
@@ -327,11 +327,11 @@ insert      : KW_INSERT                     { _handler.startInsert(); }
               opt_where_clause              { _handler.endInsert(); }
             ;
 
-update      : KW_UPDATE                      { _handler.startUpdate(); } 
+update      : KW_UPDATE                      { super._handleEndOfRules(); _handler.startUpdate(); } 
               function_call opt_where_clause { _handler.endUpdate(); }
             ;
 
-merge       : KW_MERGE                      { _handler.startMerge(); }
+merge       : KW_MERGE                      { super._handleEndOfRules(); _handler.startMerge(); }
               literal COMMA literal 
               opt_where_clause              { _handler.endMerge(); }
             ;
