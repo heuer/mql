@@ -15,7 +15,6 @@
  */
 package com.semagia.mql.tolog;
 
-import java.util.EmptyStackException;
 import java.util.Set;
 
 import com.semagia.mql.MQLException;
@@ -550,13 +549,13 @@ final class RulesHandler implements ITologHandler {
         private int _valCount;
 
         Events() {
-            this(13);
+            this(110, 36);
         }
         
-        Events(final int initialCapacity) {
-            _items = new int[initialCapacity][2];
+        Events(final int itemCapacity, final int valueCapacity) {
+            _items = new int[itemCapacity][2];
             _itemCount = 0;
-            _values = new Object[10];
+            _values = new Object[valueCapacity];
             _valCount = 0;
         }
 
@@ -591,13 +590,6 @@ final class RulesHandler implements ITologHandler {
             return _items[index][0];
         }
 
-        public int peek() {
-            if (_itemCount == 0) {
-                throw new EmptyStackException();
-            }
-            return _items[_itemCount-1][0];
-        }
-
         public Object getValue(int index) {
             final int i = _items[index][1];
             return _values[i];
@@ -610,6 +602,8 @@ final class RulesHandler implements ITologHandler {
         public void close() {
             _items = null;
             _itemCount = 0;
+            _values = null;
+            _valCount = 0;
         }
 
     }

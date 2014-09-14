@@ -120,7 +120,7 @@ public class DefaultTologHandler implements ITologHandler {
     public void endFunctionInvocation() throws MQLException { }
 
     @Override
-    public void startRuleInvocation() throws MQLException { }
+    public void startRuleInvocation(String name) throws MQLException { }
 
     @Override
     public void endRuleInvocation() throws MQLException { }

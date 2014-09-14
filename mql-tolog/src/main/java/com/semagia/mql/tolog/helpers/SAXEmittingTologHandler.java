@@ -54,8 +54,8 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
     }
 
     @Override
-    public void startRuleInvocation() throws MQLException {
-        super.startElement("rule-invocation");
+    public void startRuleInvocation(String name) throws MQLException {
+        super.startElement("rule-invocation", "name", name);
     }
 
     @Override
