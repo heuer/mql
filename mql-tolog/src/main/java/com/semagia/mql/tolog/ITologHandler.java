@@ -40,7 +40,7 @@ public interface ITologHandler extends IQueryHandler {
 
     void endFunctionInvocation() throws MQLException;
 
-    void startRuleInvocation() throws MQLException;
+    void startRuleInvocation(String name) throws MQLException;
 
     void endRuleInvocation() throws MQLException;
 

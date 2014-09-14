@@ -22,7 +22,7 @@ import com.semagia.mql.MQLException;
 import com.semagia.mql.tolog.ITologHandler;
 
 /**
- * 
+ * Writes all events to a log and delegates the events to an underlying {@link ITologHandler}.
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
