@@ -50,9 +50,7 @@ public final class TologParser extends RealTologParser implements ITologParser {
         try {
             super._handler.start();
             yyparse(lexer);
-            if (_issueEndOfRulesEvent) {
-                super._handler.endRules();
-            }
+            super._handleEndOfRules();
             super._handler.end();
         }
         catch (yyException ex) {

@@ -15,13 +15,12 @@
  */
 package com.semagia.mql.tolog;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.semagia.mql.MQLException;
-import com.semagia.mql.tolog.helpers.DefaultTologHandler;
 
 /**
  * Abstract helper class to avoid too much code within the RealTologParser.y grammar.
@@ -30,24 +29,21 @@ import com.semagia.mql.tolog.helpers.DefaultTologHandler;
  */
 abstract class AbstractTologParser {
 
-    private static final ITologHandler _DEFAULT_HANDLER = new DefaultTologHandler();
-
     protected ITologHandler _handler;
     protected final PredicateClause _predClause;
     private final Map<String, PrefixBinding> _prefixes;
-    private final List<String> _ruleNames;
+    private final Set<String> _ruleNames;
+    private final Map<String, PrefixBinding> _declPrefixes;
+    private final Set<String> _declRuleNames;
     protected boolean _inRule;
     protected boolean _issueEndOfRulesEvent;
 
     protected AbstractTologParser() {
-        setHandler(_DEFAULT_HANDLER);
         _predClause = new PredicateClause();
         _prefixes = new HashMap<String, PrefixBinding>();
-        _ruleNames = new ArrayList<String>();
-    }
-
-    public ITologHandler getHandler() {
-        return _handler;
+        _declPrefixes = new HashMap<String, PrefixBinding>();
+        _ruleNames = new HashSet<String>();
+        _declRuleNames = new HashSet<String>();
     }
 
     public void setHandler(final ITologHandler handler) {
@@ -59,12 +55,13 @@ abstract class AbstractTologParser {
     }
 
     private boolean _isRule(String name) {
-        return _ruleNames.contains(name);
+        return _ruleNames.contains(name) || _declRuleNames.contains(name);
     }
 
     protected final void handleRuleStart() throws MQLException {
         _inRule = true;
         if (!_issueEndOfRulesEvent) {
+            _handler = new RulesHandler(_handler, _declRuleNames);
             _handler.startRules();
             _issueEndOfRulesEvent = true;
         }
@@ -86,6 +83,7 @@ abstract class AbstractTologParser {
         final int kind = ref.getType();
         final String name = ref.getValue();
         final boolean isIdent = kind == TologReference.IDENT;
+        final boolean isRule = _isRule(name);
         boolean handled = false;
         if (isIdent && isBuiltinPredicate(name)) {
             _handler.startBuiltinPredicate(name);
@@ -94,21 +92,28 @@ abstract class AbstractTologParser {
             handled = true;
         }
         else {
-            /*
-            if (_isRule(name)) {
-                _handler.startRuleInvocation();
-                issueNameEvent(_predClause.ref);
-                issueArgumentEvents();
-                _handler.endRuleInvocation();
-                handled = true;
-            }
-            */
-            if (isIdent && _predClause.arguments.length == 2 && !_isRule(name)) {
-                _handler.startOccurrencePredicate();
-                issueNameEvent(_predClause.ref);
-                issueArgumentEvents();
-                _handler.endOccurrencePredicate();
-                handled = true;
+            if (isIdent) {
+                if (_predClause.arguments.length == 2) {
+                    if (isRule) {
+                        _handler.startRuleInvocation(name);
+                        issueArgumentEvents();
+                        _handler.endRuleInvocation();
+                        handled = true;
+                    }
+                    else {
+                        _handler.startOccurrencePredicate();
+                        issueNameEvent(_predClause.ref);
+                        issueArgumentEvents();
+                        _handler.endOccurrencePredicate();
+                        handled = true;
+                    }
+                }
+                else if (isRule) {
+                    _handler.startRuleInvocation(name);
+                    issueArgumentEvents();
+                    _handler.endRuleInvocation();
+                    handled = true;
+                }
             }
             else if (kind == TologReference.QNAME) {
                 final int colonIdx = name.indexOf(':');
@@ -179,7 +184,10 @@ abstract class AbstractTologParser {
     }
 
     private PrefixBinding resolveQName(final String prefix) throws MQLException {
-        final PrefixBinding binding = _prefixes.get(prefix);
+        PrefixBinding binding = _prefixes.get(prefix);
+        if (binding == null) {
+            binding = _declPrefixes.get(prefix);
+        }
         if (binding == null) {
             throw new MQLException("Unknown prefix '"  + prefix + "'");
         }
@@ -206,6 +214,15 @@ abstract class AbstractTologParser {
         }
         _prefixes.put(prefix, new PrefixBinding(iri, kind));
         return true;
+    }
+
+    public void addDeclarationNamespace(final String prefix, final String iri, final int kind) throws MQLException {
+        System.out.println("Added prefix " + prefix + " <" + iri + ">");
+        _declPrefixes.put(prefix, new PrefixBinding(iri, kind));
+    }
+
+    public void addDeclaredRulename(String name) {
+        _declRuleNames.add(name);
     }
 
     protected void handlePair(TologReference type, TologReference player) throws MQLException {
@@ -242,9 +259,10 @@ abstract class AbstractTologParser {
         _handler.endOr();
     }
 
-    private void _handleEndOfRules() throws MQLException {
+    protected void _handleEndOfRules() throws MQLException {
         if (!_inRule && _issueEndOfRulesEvent) {
             _handler.endRules();
+            _handler = ((RulesHandler) _handler).getHandler();
             _issueEndOfRulesEvent = false;
         }
     }
