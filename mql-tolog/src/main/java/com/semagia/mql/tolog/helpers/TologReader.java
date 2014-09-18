@@ -63,7 +63,7 @@ public class TologReader implements XMLReader {
             reader = new BufferedReader(new InputStreamReader(new URL(input.getSystemId( )).openStream( )));
         } 
         else {
-            throw new SAXException("Invalid InputSource object");
+            throw new SAXException("Invalid InputSource instance");
         }
         final ITologHandler handler = new SAXEmittingTologHandler(_contentHandler);
         final TologParser parser = new TologParser();

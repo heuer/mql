@@ -16,7 +16,7 @@ dependencies {
     compile project(':mql-core')
     // While we do not want to expose OSGi as a depedency, we need the lib for Eclipse in the classpath
     testCompile 'org.osgi:org.osgi.core:4.0.1',
-                'xom:xom:1.2.9'
+                'xom:xom:1.2.5'
 }
 
 sourceSets {
