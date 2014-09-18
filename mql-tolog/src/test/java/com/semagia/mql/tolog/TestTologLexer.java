@@ -176,7 +176,7 @@ public class TestTologLexer extends TestCase {
     }
 
     public void testQName() throws Exception {
-        final String input = "q:name another:qname legal:q2name.here";
+        final String input = "q:name another:qname legal:q2name-here";
         final int[] expected = new int[] { 
                 TokenTypes.QNAME, 
                 TokenTypes.QNAME,

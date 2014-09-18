@@ -69,7 +69,9 @@ final class RulesHandler implements ITologHandler {
         START_RULE_INVOCATION = 38,
         END_RULE_INVOCATION = 39,
         START_PREDICATE = 40,
-        END_PREDICATE = 41
+        END_PREDICATE = 41,
+        START_INTERNAL_PREDICATE = 42,
+        END_INTERNAL_PREDICATE = 43
         ;
 
     private final ITologHandler _handler;
@@ -99,10 +101,11 @@ final class RulesHandler implements ITologHandler {
         while (i < max) {
             final int event = _events.get(i);
             switch (event) {
-                case START_BUILTIN_PREDICATE: _handler.startBuiltinPredicate((String) _events.getValue(i)); i++; break;
-                case START_INFIX_PREDICATE: _handler.startInfixPredicate((String) _events.getValue(i)); i++; break;
-                case START_PREDICATE: _handler.startPredicate(); i++; break;
-                case START_ASSOC: _handler.startAssociationPredicate(); i++; break;
+                case START_BUILTIN_PREDICATE: _handler.startBuiltinPredicate((String) _events.getValue(i), Hints.EMPTY_HINTS); i++; break;
+                case START_INFIX_PREDICATE: _handler.startInfixPredicate((String) _events.getValue(i), Hints.EMPTY_HINTS); i++; break;
+                case START_INTERNAL_PREDICATE: _handler.startInternalPredicate((String) _events.getValue(i), new String[0], Hints.EMPTY_HINTS); i++; break;
+                case START_PREDICATE: _handler.startPredicate(Hints.EMPTY_HINTS); i++; break;
+                case START_ASSOC: _handler.startAssociationPredicate(Hints.EMPTY_HINTS); i++; break;
                 case END_ASSOC: _handler.endAssociationPredicate(); i++; break;
                 case START_PAIR: _handler.startPair(); i++; break;
                 case END_PAIR: _handler.endPair(); i++; break;
@@ -114,6 +117,7 @@ final class RulesHandler implements ITologHandler {
                 case END_BRANCH: _handler.endBranch(); i++; break;
                 case END_BUILTIN_PREDICATE: _handler.endBuiltinPredicate(); i++; break;
                 case END_INFIX_PREDICATE: _handler.endInfixPredicate(); i++; break;
+                case END_INTERNAL_PREDICATE: _handler.endInternalPredicate(); i++; break;
                 case END_PREDICATE: _handler.endPredicate(); i++; break;
                 case START_TYPE: _handler.startType(); i++; break;
                 case END_TYPE: _handler.endType(); i++; break;
@@ -146,8 +150,6 @@ final class RulesHandler implements ITologHandler {
         _handler.endRules();
     }
 
-    
-
     private void _handleStartRule(int i) throws MQLException {
         String[] ruleNameAndArgs = (String[]) _events.getValue(i);
         String[] args = new String[ruleNameAndArgs.length-1];
@@ -163,7 +165,7 @@ final class RulesHandler implements ITologHandler {
             i++; // endName
         }
         else {
-            _handler.startOccurrencePredicate();
+            _handler.startOccurrencePredicate(Hints.EMPTY_HINTS);
         }
         i++;
         return i;
@@ -175,7 +177,7 @@ final class RulesHandler implements ITologHandler {
     }
 
     @Override
-    public void startAssociationPredicate() throws MQLException {
+    public void startAssociationPredicate(Hints options) throws MQLException {
         _events.add(START_ASSOC);
     }
 
@@ -185,7 +187,7 @@ final class RulesHandler implements ITologHandler {
     }
 
     @Override
-    public void startOccurrencePredicate() throws MQLException {
+    public void startOccurrencePredicate(Hints options) throws MQLException {
         _events.add(START_OCC);
     }
 
@@ -205,13 +207,23 @@ final class RulesHandler implements ITologHandler {
     }
 
     @Override
-    public void startBuiltinPredicate(String name) throws MQLException {
+    public void startBuiltinPredicate(String name, Hints option) throws MQLException {
         _events.add(START_BUILTIN_PREDICATE, name);
     }
 
     @Override
     public void endBuiltinPredicate() throws MQLException {
         _events.add(END_BUILTIN_PREDICATE);
+    }
+
+    @Override
+    public void startInternalPredicate(String name, String[] removedVariables, Hints hints) throws MQLException {
+        _events.add(START_INTERNAL_PREDICATE, name);
+    }
+
+    @Override
+    public void endInternalPredicate() throws MQLException {
+        _events.add(END_INTERNAL_PREDICATE);
     }
 
     @Override
@@ -229,7 +241,7 @@ final class RulesHandler implements ITologHandler {
     }
 
     @Override
-    public void startInfixPredicate(String name) throws MQLException {
+    public void startInfixPredicate(String name, Hints options) throws MQLException {
         _events.add(START_INFIX_PREDICATE, name);
     }
 
@@ -309,7 +321,7 @@ final class RulesHandler implements ITologHandler {
     }
 
     @Override
-    public void startPredicate() throws MQLException {
+    public void startPredicate(Hints options) throws MQLException {
         _events.add(START_PREDICATE);
     }
 

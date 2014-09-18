@@ -17,6 +17,7 @@ package com.semagia.mql.tolog.helpers;
 
 import com.semagia.mql.MQLException;
 import com.semagia.mql.tolog.ITologHandler;
+import com.semagia.mql.tolog.Hints;
 
 /**
  * Delegates all events to an underlying {@link ITologHandler}.
@@ -100,8 +101,8 @@ public class DelegatingTologHandler implements ITologHandler {
     }
 
     @Override
-    public void startAssociationPredicate() throws MQLException {
-        _handler.startAssociationPredicate();
+    public void startAssociationPredicate(Hints options) throws MQLException {
+        _handler.startAssociationPredicate(options);
     }
 
     @Override
@@ -115,8 +116,8 @@ public class DelegatingTologHandler implements ITologHandler {
     }
 
     @Override
-    public void startBuiltinPredicate(String name) throws MQLException {
-        _handler.startBuiltinPredicate(name);
+    public void startBuiltinPredicate(String name, Hints options) throws MQLException {
+        _handler.startBuiltinPredicate(name, options);
     }
 
     @Override
@@ -145,8 +146,8 @@ public class DelegatingTologHandler implements ITologHandler {
     }
 
     @Override
-    public void startInfixPredicate(String name) throws MQLException {
-        _handler.startInfixPredicate(name);
+    public void startInfixPredicate(String name, Hints options) throws MQLException {
+        _handler.startInfixPredicate(name, options);
     }
 
     @Override
@@ -201,8 +202,8 @@ public class DelegatingTologHandler implements ITologHandler {
     }
 
     @Override
-    public void startOccurrencePredicate() throws MQLException {
-        _handler.startOccurrencePredicate();
+    public void startOccurrencePredicate(Hints options) throws MQLException {
+        _handler.startOccurrencePredicate(options);
     }
 
     @Override
@@ -216,13 +217,23 @@ public class DelegatingTologHandler implements ITologHandler {
     }
 
     @Override
-    public void startPredicate() throws MQLException {
-        _handler.startPredicate();
+    public void startPredicate(Hints options) throws MQLException {
+        _handler.startPredicate(options);
     }
 
     @Override
     public void endPredicate() throws MQLException {
         _handler.endPredicate();
+    }
+
+    @Override
+    public void startInternalPredicate(String name, String[] removedVariables, Hints hints) throws MQLException {
+        _handler.startInternalPredicate(name, removedVariables, hints);
+    }
+
+    @Override
+    public void endInternalPredicate() throws MQLException {
+        _handler.endInternalPredicate();
     }
 
     @Override

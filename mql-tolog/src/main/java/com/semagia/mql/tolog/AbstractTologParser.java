@@ -86,7 +86,7 @@ abstract class AbstractTologParser {
         final boolean isRule = _isRule(name);
         boolean handled = false;
         if (isIdent && isBuiltinPredicate(name)) {
-            _handler.startBuiltinPredicate(name);
+            _handler.startBuiltinPredicate(name, Hints.EMPTY_HINTS);
             issueArgumentEvents();
             _handler.endBuiltinPredicate();
             handled = true;
@@ -101,7 +101,7 @@ abstract class AbstractTologParser {
                         handled = true;
                     }
                     else {
-                        _handler.startOccurrencePredicate();
+                        _handler.startOccurrencePredicate(Hints.EMPTY_HINTS);
                         issueNameEvent(_predClause.ref);
                         issueArgumentEvents();
                         _handler.endOccurrencePredicate();
@@ -120,7 +120,7 @@ abstract class AbstractTologParser {
                 final String prefix = name.substring(0, colonIdx);
                 final PrefixBinding binding = resolveQName(prefix);
                 if (binding.kind != ITologHandler.PREFIX_KIND_MODULE) {
-                    _handler.startOccurrencePredicate();
+                    _handler.startOccurrencePredicate(Hints.EMPTY_HINTS);
                     issueNameEvent(_predClause.ref);
                     issueArgumentEvents();
                     _handler.endOccurrencePredicate();
@@ -129,7 +129,7 @@ abstract class AbstractTologParser {
             }
         }
         if (!handled) {
-            _handler.startPredicate();
+            _handler.startPredicate(Hints.EMPTY_HINTS);
             issueNameEvent(_predClause.ref);
             issueArgumentEvents();
             _handler.endPredicate();
@@ -150,7 +150,7 @@ abstract class AbstractTologParser {
 
     protected void handleInfixPredicate(final String name, final TologReference lhs, final TologReference rhs) throws MQLException {
         _handleEndOfRules();
-        _handler.startInfixPredicate(name);
+        _handler.startInfixPredicate(name, Hints.EMPTY_HINTS);
         issueEvent(lhs);
         issueEvent(rhs);
         _handler.endInfixPredicate();
@@ -238,7 +238,7 @@ abstract class AbstractTologParser {
 
     protected void startAssociationPredicate(final TologReference assocType, final TologReference roleType, final TologReference rolePlayer) throws MQLException {
         _handleEndOfRules();
-        _handler.startAssociationPredicate(); 
+        _handler.startAssociationPredicate(Hints.EMPTY_HINTS); 
         issueNameEvent(assocType); 
         handlePair(roleType, rolePlayer);
     }

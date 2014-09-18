@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import com.semagia.mql.MQLException;
 import com.semagia.mql.tolog.ITologHandler;
+import com.semagia.mql.tolog.Hints;
 
 /**
  * Writes all events to a log and delegates the events to an underlying {@link ITologHandler}.
@@ -111,9 +112,9 @@ public class LoggingTologHandler extends DelegatingTologHandler {
     }
 
     @Override
-    public void startAssociationPredicate() throws MQLException {
+    public void startAssociationPredicate(Hints options) throws MQLException {
         _LOG.info("startAssociationPredicate");
-        super.startAssociationPredicate();
+        super.startAssociationPredicate(options);
     }
 
     @Override
@@ -129,9 +130,9 @@ public class LoggingTologHandler extends DelegatingTologHandler {
     }
 
     @Override
-    public void startBuiltinPredicate(String name) throws MQLException {
+    public void startBuiltinPredicate(String name, Hints options) throws MQLException {
         _LOG.info("startBuiltinPredicate, name='{}'", name);
-        super.startBuiltinPredicate(name);
+        super.startBuiltinPredicate(name, options);
     }
 
     @Override
@@ -169,9 +170,9 @@ public class LoggingTologHandler extends DelegatingTologHandler {
     }
 
     @Override
-    public void startInfixPredicate(String name) throws MQLException {
+    public void startInfixPredicate(String name, Hints options) throws MQLException {
         _LOG.info("startInfixPredicate name='{}'", name);
-        super.startInfixPredicate(name);
+        super.startInfixPredicate(name, options);
     }
 
     @Override
@@ -236,9 +237,9 @@ public class LoggingTologHandler extends DelegatingTologHandler {
     }
 
     @Override
-    public void startOccurrencePredicate() throws MQLException {
+    public void startOccurrencePredicate(Hints options) throws MQLException {
         _LOG.info("startOccurrencePredicate");
-        super.startOccurrencePredicate();
+        super.startOccurrencePredicate(options);
     }
 
     @Override
@@ -254,15 +255,27 @@ public class LoggingTologHandler extends DelegatingTologHandler {
     }
 
     @Override
-    public void startPredicate() throws MQLException {
+    public void startPredicate(Hints options) throws MQLException {
         _LOG.info("startPredicate");
-        super.startPredicate();
+        super.startPredicate(options);
     }
 
     @Override
     public void endPredicate() throws MQLException {
         _LOG.info("endPredicate");
         super.endPredicate();
+    }
+
+    @Override
+    public void startInternalPredicate(String name, String[] removedVariables, Hints hints) throws MQLException {
+        _LOG.info("startInternalPredicate, name='{}', removed='{}'", name, removedVariables);
+        super.startInternalPredicate(name, removedVariables, hints);
+    }
+
+    @Override
+    public void endInternalPredicate() throws MQLException {
+        _LOG.info("endInternalPredicate");
+        super.endInternalPredicate();
     }
 
     @Override

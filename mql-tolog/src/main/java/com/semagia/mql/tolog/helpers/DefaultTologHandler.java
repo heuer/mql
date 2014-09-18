@@ -17,6 +17,7 @@ package com.semagia.mql.tolog.helpers;
 
 import com.semagia.mql.MQLException;
 import com.semagia.mql.tolog.ITologHandler;
+import com.semagia.mql.tolog.Hints;
 
 /**
  * 
@@ -132,13 +133,13 @@ public class DefaultTologHandler implements ITologHandler {
     public void endMerge() throws MQLException { }
 
     @Override
-    public void startAssociationPredicate() throws MQLException { }
+    public void startAssociationPredicate(Hints options) throws MQLException { }
 
     @Override
     public void endAssociationPredicate() throws MQLException { }
 
     @Override
-    public void startBuiltinPredicate(String name) throws MQLException { }
+    public void startBuiltinPredicate(String name, Hints options) throws MQLException { }
 
     @Override
     public void endBuiltinPredicate() throws MQLException { }
@@ -150,7 +151,7 @@ public class DefaultTologHandler implements ITologHandler {
     public void endRule() throws MQLException { }
 
     @Override
-    public void startInfixPredicate(String name) throws MQLException { }
+    public void startInfixPredicate(String name, Hints options) throws MQLException { }
 
     @Override
     public void endInfixPredicate() throws MQLException { }
@@ -178,16 +179,22 @@ public class DefaultTologHandler implements ITologHandler {
     public void endName() throws MQLException { }
 
     @Override
-    public void startOccurrencePredicate() throws MQLException { }
+    public void startOccurrencePredicate(Hints options) throws MQLException { }
 
     @Override
     public void endOccurrencePredicate() throws MQLException { }
 
     @Override
-    public void startPredicate() throws MQLException { }
+    public void startPredicate(Hints options) throws MQLException { }
 
     @Override
     public void endPredicate() throws MQLException { }
+
+    @Override
+    public void startInternalPredicate(String name, String[] removdVariables, Hints hints) throws MQLException { }
+
+    @Override
+    public void endInternalPredicate() throws MQLException { }
 
     @Override
     public void startPair() throws MQLException { }

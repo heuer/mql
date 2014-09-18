@@ -26,10 +26,11 @@ import com.semagia.mql.MQLException;
  */
 public interface ITologHandler extends IQueryHandler {
 
-    public final int PREFIX_KIND_SUBJECT_IDENTIFIER = IRef.SUBJECT_IDENTIFIER,
-                     PREFIX_KIND_SUBJECT_LOCATOR = IRef.SUBJECT_LOCATOR,
-                     PREFIX_KIND_ITEM_IDENTIFIER = IRef.ITEM_IDENTIFIER,
-                     PREFIX_KIND_MODULE = -1001;
+    public final int 
+        PREFIX_KIND_SUBJECT_IDENTIFIER = IRef.SUBJECT_IDENTIFIER,
+        PREFIX_KIND_SUBJECT_LOCATOR = IRef.SUBJECT_LOCATOR,
+        PREFIX_KIND_ITEM_IDENTIFIER = IRef.ITEM_IDENTIFIER,
+        PREFIX_KIND_MODULE = -1001;
 
 
     void option(String key, String value) throws MQLException;
@@ -48,11 +49,11 @@ public interface ITologHandler extends IQueryHandler {
 
     void endMerge() throws MQLException;
 
-    void startAssociationPredicate() throws MQLException;
+    void startAssociationPredicate(Hints options) throws MQLException;
 
     void endAssociationPredicate() throws MQLException;
 
-    void startBuiltinPredicate(String name) throws MQLException;
+    void startBuiltinPredicate(String name, Hints options) throws MQLException;
 
     void endBuiltinPredicate() throws MQLException;
 
@@ -60,9 +61,13 @@ public interface ITologHandler extends IQueryHandler {
 
     void endRule() throws MQLException;
 
-    void startInfixPredicate(String name) throws MQLException;
+    void startInfixPredicate(String name, Hints options) throws MQLException;
 
     void endInfixPredicate() throws MQLException;
+
+    void startInternalPredicate(String name, String[] removedVariables, Hints hints) throws MQLException;
+
+    void endInternalPredicate() throws MQLException;
 
     void startFragment() throws MQLException;
     
@@ -76,11 +81,11 @@ public interface ITologHandler extends IQueryHandler {
 
     void endName() throws MQLException;
 
-    void startOccurrencePredicate() throws MQLException;
+    void startOccurrencePredicate(Hints options) throws MQLException;
 
     void endOccurrencePredicate() throws MQLException;
 
-    void startPredicate() throws MQLException;
+    void startPredicate(Hints options) throws MQLException;
 
     void endPredicate() throws MQLException;
 

@@ -177,7 +177,7 @@ clause      : predclause                       { super.handlePredicateClause(); 
             | notclause
             ;
 
-assoc_head  : ref LPAREN expr COLON ref     { _handler.startAssociationPredicate(); super.issueNameEvent($1); super.handlePair($5, $3); }
+assoc_head  : ref LPAREN expr COLON ref     { _handler.startAssociationPredicate(Hints.EMPTY_HINTS); super.issueNameEvent($1); super.handlePair($5, $3); }
             ;
 
 predclause  : ref LPAREN arguments RPAREN   { super._predClause.ref = $1; super._predClause.arguments = $3.toArray(new TologReference[0]); }

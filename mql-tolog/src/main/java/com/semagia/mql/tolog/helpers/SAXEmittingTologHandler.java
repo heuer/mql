@@ -1,5 +1,17 @@
-/**
- * 
+/*
+ * Copyright 2010 - 2014 Lars Heuer (heuer[at]semagia.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.semagia.mql.tolog.helpers;
 
@@ -8,6 +20,7 @@ import org.xml.sax.ContentHandler;
 import com.semagia.mql.MQLException;
 import com.semagia.mql.base.AbstractSAXEmittingQueryHandler;
 import com.semagia.mql.tolog.ITologHandler;
+import com.semagia.mql.tolog.Hints;
 
 /**
  * {@link ITologHandler} implementations which translates the events into SAX events.
@@ -19,8 +32,55 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
 
     private static final String TOLOG_NS = "http://psi.semagia.com/tolog-xml/";
 
+    private static final String[][] _EMPTY_HINTS = new String[0][0];
+
     public SAXEmittingTologHandler(ContentHandler handler) {
         super(handler, TOLOG_NS);
+    }
+
+    private static String[][] translateHints(Hints hints) {
+        final int[] constructs = hints.getConstructs();
+        String constructHints = null;
+        if (constructs.length != 0) {
+            StringBuilder buff = new StringBuilder();
+            for (int i=0; i<constructs.length; i++) {
+                if (i > 0) {
+                    buff.append(' ');
+                }
+                switch (constructs[i]) {
+                    case Hints.ASSOCIATION: buff.append("association"); break;
+                    case Hints.OCCURRENCE: buff.append("occurrence"); break;
+                    case Hints.NAME: buff.append("name"); break;
+                    case Hints.TOPIC: buff.append("topic"); break;
+                    case Hints.VARIANT: buff.append("variant"); break;
+                    case Hints.ROLE: buff.append("role"); break;
+                    case Hints.TOPICMAP: buff.append("topicmap"); break;
+                }
+            }
+            constructHints = buff.toString();
+        }
+        if (hints.getCost() != Hints.UNKNOWN_COSTS) {
+            if (constructHints != null) {
+                return new String[][] { {"costs", String.valueOf(hints.getCost())}, 
+                                        {"hint", constructHints} };
+            }
+            else {
+                return new String[][] { {"costs", String.valueOf(hints.getCost())} };
+            }
+        }
+        else if (constructHints != null) {
+            return new String[][] { {"hint", constructHints } };
+        }
+        return _EMPTY_HINTS;
+    }
+
+    private static String[][] translateHintsAndName(final String name, final Hints hints) {
+        String[][] tmp = translateHints(hints);
+        String[][] attrs = new String[tmp.length+1][2];
+        attrs[0][0] = "name";
+        attrs[0][1] = name;
+        System.arraycopy(tmp, 0, attrs, 1, tmp.length);
+        return attrs;
     }
 
     private static String prefixKindToString(final int kind) throws MQLException {
@@ -64,6 +124,30 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
     }
 
     @Override
+    public void startInternalPredicate(String name, String[] removedVariables, Hints hints) throws MQLException {
+        String[][] attrs = translateHintsAndName(name, hints);
+        if (removedVariables.length > 0) {
+            StringBuilder buff = new StringBuilder();
+            buff.append(removedVariables[0]);
+            for(int i=1; i<removedVariables.length; i++) {
+                buff.append(' ');
+                buff.append(removedVariables[i]);
+            }
+            String[][] tmp = new String[attrs.length+1][2];
+            tmp[0][0] = "removed-variables";
+            tmp[0][1] = buff.toString();
+            System.arraycopy(attrs, 0, tmp, 1, attrs.length);
+            attrs = tmp;
+        }
+        super.startElement("internal-predicate", attrs);
+    }
+
+    @Override
+    public void endInternalPredicate() throws MQLException {
+        super.endElement("internal-predicate");
+    }
+
+    @Override
     public void startMerge() throws MQLException {
         super.startElement("merge");
     }
@@ -74,8 +158,8 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
     }
 
     @Override
-    public void startAssociationPredicate() throws MQLException {
-        super.startElement("association-predicate");
+    public void startAssociationPredicate(Hints hints) throws MQLException {
+        super.startElement("association-predicate", translateHints(hints));
     }
 
     @Override
@@ -84,8 +168,8 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
     }
 
     @Override
-    public void startBuiltinPredicate(String name) throws MQLException {
-        super.startElement("builtin-predicate", "name", name);
+    public void startBuiltinPredicate(String name, Hints hints) throws MQLException {
+        super.startElement("builtin-predicate", translateHintsAndName(name, hints));
     }
 
     @Override
@@ -109,8 +193,8 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
     }
 
     @Override
-    public void startInfixPredicate(String name) throws MQLException {
-        super.startElement("infix-predicate", "name", name);
+    public void startInfixPredicate(String name, Hints hints) throws MQLException {
+        super.startElement("infix-predicate", translateHintsAndName(name, hints));
     }
 
     @Override
@@ -135,7 +219,7 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
 
     @Override
     public void qname(int kind, final String prefix, final String localPart) throws MQLException {
-        super.emptyElement("qname", new String[][]{{"prefix", prefix}, {"localpart", localPart}});
+        super.emptyElement("qname", new String[][]{{"prefix", prefix}, {"localpart", localPart}, {"kind", prefixKindToString(kind)}});
     }
 
     @Override
@@ -149,8 +233,8 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
     }
 
     @Override
-    public void startOccurrencePredicate() throws MQLException {
-        super.startElement("occurrence-predicate");
+    public void startOccurrencePredicate(Hints hints) throws MQLException {
+        super.startElement("occurrence-predicate", translateHints(hints));
     }
 
     @Override
@@ -159,7 +243,7 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
     }
 
     @Override
-    public void startPredicate() throws MQLException {
+    public void startPredicate(Hints options) throws MQLException {
         super.startElement("predicate");
     }
 
@@ -225,7 +309,7 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
 
     @Override
     public void parameter(String name) throws MQLException {
-        super.emptyElement("string", "name", name);
+        super.emptyElement("parameter", "name", name);
     }
 
     @Override
