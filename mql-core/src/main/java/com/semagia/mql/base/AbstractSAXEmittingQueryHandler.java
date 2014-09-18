@@ -31,8 +31,7 @@ import com.semagia.mql.MQLException;
  */
 public abstract class AbstractSAXEmittingQueryHandler implements IQueryHandler {
 
-    protected static final Attributes _EMPTY_ATTRS = new AttributesImpl();
-    
+    private static final Attributes _EMPTY_ATTRS = new AttributesImpl();
     protected final ContentHandler _handler;
     private final AttributesImpl _attrs = new AttributesImpl();
 
@@ -55,9 +54,6 @@ public abstract class AbstractSAXEmittingQueryHandler implements IQueryHandler {
         startElement("query");
     }
 
-    /* (non-Javadoc)
-     * @see com.semagia.mql.IQueryHandler#end()
-     */
     @Override
     public void end() throws MQLException {
         endElement("query");
@@ -205,7 +201,7 @@ public abstract class AbstractSAXEmittingQueryHandler implements IQueryHandler {
         emptyElement("variable", "name", name);
     }
 
-    protected final void characters(String value) throws MQLException {
+    private final void characters(String value) throws MQLException {
         try {
             final char[] ch = value.toCharArray();
             _handler.characters(ch, 0, ch.length);
