@@ -32,14 +32,26 @@ import com.semagia.mql.MQLException;
 public abstract class AbstractSAXEmittingQueryHandler implements IQueryHandler {
 
     private static final Attributes _EMPTY_ATTRS = new AttributesImpl();
-    protected final ContentHandler _handler;
+    protected ContentHandler _handler;
     private final AttributesImpl _attrs = new AttributesImpl();
 
     private final String _namespace;
 
+    protected AbstractSAXEmittingQueryHandler(final String namespace) {
+        _namespace = namespace;
+    }
+
     protected AbstractSAXEmittingQueryHandler(final ContentHandler handler, final String namespace) {
         _handler = handler;
         _namespace = namespace;
+    }
+
+    public void setContentHandler(final ContentHandler handler) {
+        _handler = handler;
+    }
+
+    public ContentHandler getContentHandler() {
+        return _handler;
     }
 
     @Override

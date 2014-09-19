@@ -148,7 +148,7 @@ public final class XMLTologContentHandler extends DefaultHandler {
             _ruleProps.add(attrs.getValue("name"));
         }
         else if (name.equals("body")) {
-            _handler.startRule(_ruleProps.get(0), _ruleProps.subList(1, _ruleProps.size()-1).toArray(new String[_ruleProps.size()-1]));
+            _handler.startRule(_ruleProps.get(0), _ruleProps.subList(1, _ruleProps.size()).toArray(new String[_ruleProps.size()-1]));
             _omitVariableEvents = false;
             _ruleProps.clear();
         }

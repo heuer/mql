@@ -30,7 +30,6 @@ import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.XMLReader;
 
-import com.semagia.mql.tolog.ITologHandler;
 import com.semagia.mql.tolog.TologParser;
 
 /**
@@ -40,10 +39,10 @@ import com.semagia.mql.tolog.TologParser;
  */
 public class TologReader implements XMLReader {
 
-    private ContentHandler _contentHandler;
+    private final SAXEmittingTologHandler _handler;
 
     public TologReader() {
-        // noop.
+        _handler = new SAXEmittingTologHandler();
     }
 
     /* (non-Javadoc)
@@ -65,9 +64,8 @@ public class TologReader implements XMLReader {
         else {
             throw new SAXException("Invalid InputSource instance");
         }
-        final ITologHandler handler = new SAXEmittingTologHandler(_contentHandler);
         final TologParser parser = new TologParser();
-        parser.setHandler(handler);
+        parser.setHandler(_handler);
         parser.parse(reader);
     }
 
@@ -84,7 +82,7 @@ public class TologReader implements XMLReader {
      */
     @Override
     public void setContentHandler(final ContentHandler handler) {
-        _contentHandler = handler;
+        _handler.setContentHandler(handler);
     }
 
     /* (non-Javadoc)
@@ -92,7 +90,7 @@ public class TologReader implements XMLReader {
      */
     @Override
     public ContentHandler getContentHandler() {
-        return _contentHandler;
+        return _handler.getContentHandler();
     }
 
     /* (non-Javadoc)
@@ -101,8 +99,7 @@ public class TologReader implements XMLReader {
     @Override
     public boolean getFeature(String name) throws SAXNotRecognizedException,
             SAXNotSupportedException {
-        //TODO
-        return true;
+        throw new SAXNotSupportedException();
     }
 
     /* (non-Javadoc)
@@ -111,7 +108,10 @@ public class TologReader implements XMLReader {
     @Override
     public void setFeature(String name, boolean value) throws SAXNotRecognizedException,
             SAXNotSupportedException {
-        //TODO
+        if (name.equals("http://xml.org/sax/features/string-interning")
+                || name.equals("http://xml.org/sax/features/validation")) {
+            throw new SAXNotSupportedException();
+        }
     }
 
     /* (non-Javadoc)
@@ -120,8 +120,7 @@ public class TologReader implements XMLReader {
     @Override
     public Object getProperty(String name) throws SAXNotRecognizedException,
             SAXNotSupportedException {
-        //TODO
-        return null;
+        throw new SAXNotSupportedException();
     }
 
     /* (non-Javadoc)
@@ -138,7 +137,7 @@ public class TologReader implements XMLReader {
      */
     @Override
     public void setEntityResolver(EntityResolver resolver) {
-        //TODO
+
     }
 
     /* (non-Javadoc)
@@ -146,7 +145,6 @@ public class TologReader implements XMLReader {
      */
     @Override
     public EntityResolver getEntityResolver() {
-        //TODO
         return null;
     }
 
@@ -155,7 +153,7 @@ public class TologReader implements XMLReader {
      */
     @Override
     public void setDTDHandler(DTDHandler handler) {
-        //TODO
+
     }
 
     /* (non-Javadoc)
@@ -163,7 +161,6 @@ public class TologReader implements XMLReader {
      */
     @Override
     public DTDHandler getDTDHandler() {
-        //TODO
         return null;
     }
 
@@ -172,7 +169,7 @@ public class TologReader implements XMLReader {
      */
     @Override
     public void setErrorHandler(ErrorHandler handler) {
-        //TODO
+
     }
 
     /* (non-Javadoc)
@@ -180,7 +177,6 @@ public class TologReader implements XMLReader {
      */
     @Override
     public ErrorHandler getErrorHandler() {
-        //TODO
         return null;
     }
 

@@ -34,7 +34,11 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
 
     private static final String[][] _EMPTY_HINTS = new String[0][0];
 
-    public SAXEmittingTologHandler(ContentHandler handler) {
+    public SAXEmittingTologHandler() {
+        super(TOLOG_NS);
+    }
+
+    public SAXEmittingTologHandler(final ContentHandler handler) {
         super(handler, TOLOG_NS);
     }
 
