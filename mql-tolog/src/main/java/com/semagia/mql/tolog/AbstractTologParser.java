@@ -267,40 +267,17 @@ abstract class AbstractTologParser {
         }
     }
 
-    protected final static class PredicateClause {
+    protected static final class PredicateClause {
         public TologReference ref;
         public TologReference[] arguments;
     }
 
-    private static class PrefixBinding {
+    private static final class PrefixBinding {
         public String iri;
         public int kind;
         PrefixBinding(String iri, int kind) {
             this.iri = iri;
             this.kind = kind;
-        }
-    }
-
-    protected static final class Tuple {
-        
-        public static final int 
-            IDENT = 100,
-            OID = 101,
-            IID = 102,
-            SID = 103,
-            SLO = 104,
-            IRI = SID,
-            DATE_TIME = 105,
-            DATE = 106,
-            DECIMAL = 107,
-            INTEGER = 108;
-
-        public final int kind;
-        public final String value;
-
-        protected Tuple(final int kind, final String value) {
-            this.kind = kind;
-            this.value = value;
         }
     }
 

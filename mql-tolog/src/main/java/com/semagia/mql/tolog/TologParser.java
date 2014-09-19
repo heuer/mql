@@ -48,10 +48,10 @@ public final class TologParser extends RealTologParser implements ITologParser {
      */
     public void parse(final TologLexer lexer) throws IOException, MQLException {
         try {
-            super._handler.start();
+            _handler.start();
             yyparse(lexer);
-            super._handleEndOfRules();
-            super._handler.end();
+            _handleEndOfRules();
+            _handler.end();
         }
         catch (yyException ex) {
             throw new MQLException(ex.getMessage(), ex);

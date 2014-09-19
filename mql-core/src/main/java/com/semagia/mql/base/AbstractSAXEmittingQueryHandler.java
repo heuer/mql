@@ -203,7 +203,6 @@ public abstract class AbstractSAXEmittingQueryHandler implements IQueryHandler {
 
     private final void characters(String value) throws MQLException {
         try {
-            //TODO: Escape chars
             final char[] ch = value.toCharArray();
             _handler.characters(ch, 0, ch.length);
         }
