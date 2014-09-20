@@ -36,14 +36,17 @@ public abstract class AbstractSAXEmittingQueryHandler implements IQueryHandler {
     private final AttributesImpl _attrs = new AttributesImpl();
 
     private final String _namespace;
+    private final String _root;
 
-    protected AbstractSAXEmittingQueryHandler(final String namespace) {
+    protected AbstractSAXEmittingQueryHandler(final String namespace, final String root) {
         _namespace = namespace;
+        _root = root;
     }
 
-    protected AbstractSAXEmittingQueryHandler(final ContentHandler handler, final String namespace) {
+    protected AbstractSAXEmittingQueryHandler(final ContentHandler handler, final String namespace, final String root) {
         _handler = handler;
         _namespace = namespace;
+        _root = root;
     }
 
     public void setContentHandler(final ContentHandler handler) {
@@ -61,20 +64,26 @@ public abstract class AbstractSAXEmittingQueryHandler implements IQueryHandler {
             _handler.startPrefixMapping("", _namespace);
         }
         catch (SAXException ex) {
-            throw new MQLException(ex);
+            if (ex instanceof MQLException) {
+                throw (MQLException) ex;
+            }
+            throw new MQLException(ex.getMessage(), ex);
         }
-        startElement("query");
+        startElement(_root);
     }
 
     @Override
     public void end() throws MQLException {
-        endElement("query");
+        endElement(_root);
         try {
             _handler.endPrefixMapping("");
             _handler.endDocument();
         }
         catch (SAXException ex) {
-            throw new MQLException(ex);
+            if (ex instanceof MQLException) {
+                throw (MQLException) ex;
+            }
+            throw new MQLException(ex.getMessage(), ex);
         }
     }
 
@@ -247,14 +256,14 @@ public abstract class AbstractSAXEmittingQueryHandler implements IQueryHandler {
     protected final void startElement(String name, String[][] attrs) throws MQLException {
         _attrs.clear();
         for (int i=0; i < attrs.length; i++) {
-            _attrs.addAttribute("", "", attrs[i][0], "CDATA", attrs[i][1]);
+            _attrs.addAttribute("", attrs[i][0], attrs[i][0], "CDATA", attrs[i][1]);
         }
         startElement(name, _attrs);
     }
 
     private final void startElement(String name, Attributes attrs) throws MQLException {
         try {
-            _handler.startElement(_namespace, "", name, attrs);
+            _handler.startElement(_namespace, name, name, attrs);
         }
         catch (SAXException ex) {
             throw new MQLException(ex);
@@ -269,7 +278,7 @@ public abstract class AbstractSAXEmittingQueryHandler implements IQueryHandler {
 
     protected final void endElement(String name) throws MQLException {
         try {
-            _handler.endElement(_namespace, "", name);
+            _handler.endElement(_namespace, name, name);
         }
         catch (SAXException ex) {
             throw new MQLException(ex);

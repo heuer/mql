@@ -31,15 +31,16 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
         ITologHandler {
 
     private static final String TOLOG_NS = "http://psi.semagia.com/tolog-xml/";
+    private static final String ROOT = "tolog";
 
     private static final String[][] _EMPTY_HINTS = new String[0][0];
 
     public SAXEmittingTologHandler() {
-        super(TOLOG_NS);
+        super(TOLOG_NS, ROOT);
     }
 
     public SAXEmittingTologHandler(final ContentHandler handler) {
-        super(handler, TOLOG_NS);
+        super(handler, TOLOG_NS, ROOT);
     }
 
     private static String[][] translateHints(Hints hints) {

@@ -200,7 +200,7 @@ public final class XMLTologContentHandler extends DefaultHandler {
         else if (name.equals("content")) {
             _keepContent = true;
         }
-        else if (name.equals("query")) {
+        else if (name.equals("tolog")) {
             _handler.start();
         }
         else {
@@ -297,7 +297,7 @@ public final class XMLTologContentHandler extends DefaultHandler {
             _keepContent = false;
             _buff.setLength(0);
         }
-        else if (name.equals("query")) {
+        else if (name.equals("tolog")) {
             _handler.end();
         }
 
@@ -314,19 +314,19 @@ public final class XMLTologContentHandler extends DefaultHandler {
     }
 
     private static int prefixStringToKind(final String value) throws MQLException {
-        if (value.equals("subject-identifier")) {
+        if ("subject-identifier".equals(value)) {
             return ITologHandler.PREFIX_KIND_SUBJECT_IDENTIFIER;
         }
-        else if (value.equals("subject-locator")) {
+        else if ("subject-locator".equals(value)) {
             return ITologHandler.PREFIX_KIND_SUBJECT_LOCATOR;
         }
-        else if (value.equals("item-identifier")) {
+        else if ("item-identifier".equals(value)) {
             return ITologHandler.PREFIX_KIND_ITEM_IDENTIFIER;
         }
-        else if (value.equals("module")) {
+        else if ("module".equals(value)) {
             return ITologHandler.PREFIX_KIND_MODULE;
         }
-        throw new MQLException("Unknown prefix kind '" + value + "'");
+        throw new MQLException("Unknown prefix kind identifier '" + value + "'");
     }
 
     private static Hints makeHints(final Attributes attrs) throws MQLException {

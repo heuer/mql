@@ -74,13 +74,13 @@
         <xsl:variable name="variables" select="key('variables', $key)"/>
         <xsl:choose>
           <xsl:when test="count($types) = 1 and count($values) = 1 and count($variables) = 0">
-            <dynamic-predicate>
+            <occurrence-predicate>
               <name>
                 <xsl:copy-of select="$types/tl:*[2]"/>
               </name>
               <xsl:copy-of select="tl:*[1]"/>
               <xsl:copy-of select="$values/tl:*[2]"/>
-            </dynamic-predicate>
+            </occurrence-predicate>
           </xsl:when>
           <xsl:otherwise>
             <xsl:copy-of select="."/>

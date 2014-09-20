@@ -550,9 +550,6 @@ final class RulesHandler implements ITologHandler {
 
 
 
-
-
-
     private static final class Events {
 
         private int[][] _items;

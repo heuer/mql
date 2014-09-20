@@ -40,6 +40,9 @@ import com.semagia.mql.tolog.TologParser;
 public class TologReader implements XMLReader {
 
     private final SAXEmittingTologHandler _handler;
+    private ErrorHandler _errHandler;
+    private DTDHandler _dtdHandler;
+    private EntityResolver _entityResolver;
 
     public TologReader() {
         _handler = new SAXEmittingTologHandler();
@@ -108,10 +111,14 @@ public class TologReader implements XMLReader {
     @Override
     public void setFeature(String name, boolean value) throws SAXNotRecognizedException,
             SAXNotSupportedException {
-        if (name.equals("http://xml.org/sax/features/string-interning")
-                || name.equals("http://xml.org/sax/features/validation")) {
-            throw new SAXNotSupportedException();
+        if (("http://xml.org/sax/features/namespaces".equals(name) && value == true) 
+                 || "http://xml.org/sax/features/namespace-prefixes".equals(name)
+                 || "http://xml.org/sax/features/external-general-entities".equals(name)
+                 || "http://xml.org/sax/features/external-parameter-entities".equals(name)) {
+            // noop.
+            return;
         }
+        throw new SAXNotSupportedException("Unsupported feature <" + name + ">, value='" + value + "'");
     }
 
     /* (non-Javadoc)
@@ -137,7 +144,7 @@ public class TologReader implements XMLReader {
      */
     @Override
     public void setEntityResolver(EntityResolver resolver) {
-
+        _entityResolver = resolver;
     }
 
     /* (non-Javadoc)
@@ -145,7 +152,7 @@ public class TologReader implements XMLReader {
      */
     @Override
     public EntityResolver getEntityResolver() {
-        return null;
+        return _entityResolver;
     }
 
     /* (non-Javadoc)
@@ -153,7 +160,7 @@ public class TologReader implements XMLReader {
      */
     @Override
     public void setDTDHandler(DTDHandler handler) {
-
+        _dtdHandler = handler;
     }
 
     /* (non-Javadoc)
@@ -161,7 +168,7 @@ public class TologReader implements XMLReader {
      */
     @Override
     public DTDHandler getDTDHandler() {
-        return null;
+        return _dtdHandler;
     }
 
     /* (non-Javadoc)
@@ -169,7 +176,7 @@ public class TologReader implements XMLReader {
      */
     @Override
     public void setErrorHandler(ErrorHandler handler) {
-
+        _errHandler = handler;
     }
 
     /* (non-Javadoc)
@@ -177,7 +184,7 @@ public class TologReader implements XMLReader {
      */
     @Override
     public ErrorHandler getErrorHandler() {
-        return null;
+        return _errHandler;
     }
 
 }
