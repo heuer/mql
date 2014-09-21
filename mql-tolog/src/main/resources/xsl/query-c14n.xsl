@@ -20,7 +20,7 @@
 
   <xsl:key name="modns"
            match="tl:namespace[@kind='module']"
-           use="@identifier"/>
+           use="@prefix"/>
 
   <xsl:template match="@*|node()">
     <xsl:copy>
