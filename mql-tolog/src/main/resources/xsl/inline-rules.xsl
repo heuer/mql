@@ -41,11 +41,11 @@
     <xsl:if test="not($allowed)"><xsl:copy-of select="."/></xsl:if>
   </xsl:template>
 
-  <xsl:template match="tl:predicate[tl:name/tl:identifier]">
+  <xsl:template match="tl:rule-invocation">
     <!--** Replaces rule invocations with the content of the rule body if possible -->
-    <xsl:variable name="rule" select="key('rules', tl:name/tl:identifier/@value)"/>
     <xsl:choose>
-      <xsl:when test="$allowed and $rule">
+      <xsl:when test="$allowed">
+        <xsl:variable name="rule" select="key('rules', @name)"/>
         <xsl:variable name="pred-args" select="tl:*[local-name(.)!='name']"/>
         <xsl:variable name="rule2arg">
           <xsl:for-each select="$rule/tl:variable">
