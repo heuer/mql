@@ -119,7 +119,7 @@ public final class XMLTologContentHandler extends DefaultHandler {
             _handler.startNot();
         }
         else if (name.equals("rule-invocation")) {
-            _handler.startRuleInvocation(attrs.getValue("name"));
+            _handler.startRuleInvocation(attrs.getValue("name"), makeHints(attrs));
         }
         else if (name.equals("function-invocation")) {
             _handler.startFunctionInvocation(attrs.getValue("name"));
@@ -180,13 +180,13 @@ public final class XMLTologContentHandler extends DefaultHandler {
             _handler.startOrderBy();
         }
         else if (name.equals("count")) {
-            _handler.count(attrs.getValue("value"));
+            _handler.count(attrs.getValue("name"));
         }
         else if (name.equals("asc")) {
-            _handler.ascending(attrs.getValue("value"));
+            _handler.ascending(attrs.getValue("name"));
         }
         else if (name.equals("desc")) {
-            _handler.descending(attrs.getValue("value"));
+            _handler.descending(attrs.getValue("name"));
         }
         else if (name.equals("offset")) {
             _handler.offset(Integer.parseInt(attrs.getValue("value")));

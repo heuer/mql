@@ -127,7 +127,7 @@ final class RulesHandler implements ITologHandler {
                 case END_NAME: _handler.endName(); i++; break;
                 case START_RULE: _handleStartRule(i); i++; break;
                 case END_RULE: _handler.endRule(); i++; break;
-                case START_RULE_INVOCATION: _handler.startRuleInvocation((String) _events.getValue(i)); i++; break;
+                case START_RULE_INVOCATION: _handler.startRuleInvocation((String) _events.getValue(i), Hints.EMPTY_HINTS); i++; break;
                 case END_RULE_INVOCATION: _handler.endRuleInvocation(); i++; break;
                 case START_OCC: i = _handleStartOccurrence(i); break;
                 case END_OCC: if (_isRule) { _handler.endRuleInvocation(); } else { _handler.endOccurrencePredicate(); }; i++; break;
@@ -161,7 +161,7 @@ final class RulesHandler implements ITologHandler {
         _isRule = _events.get(i+2) == IDENTIFIER && _ruleNames.contains(_events.getValue(i+2));
         if (_isRule) {
             i = i+2; // startName, identifier
-            _handler.startRuleInvocation((String) _events.getValue(i));
+            _handler.startRuleInvocation((String) _events.getValue(i), Hints.EMPTY_HINTS);
             i++; // endName
         }
         else {
@@ -311,7 +311,7 @@ final class RulesHandler implements ITologHandler {
     }
 
     @Override
-    public void startRuleInvocation(String name) throws MQLException {
+    public void startRuleInvocation(String name, Hints hints) throws MQLException {
         _events.add(START_RULE_INVOCATION, name);
     }
 

@@ -77,6 +77,10 @@ abstract class AbstractTologParser {
         _ruleNames.add(name);
     }
 
+    private boolean wantIRIEvents(String name) {
+        return !("value".equals(name) || "value-like".equals(name));
+    }
+
     protected final void handlePredicateClause() throws MQLException {
         _handleEndOfRules();
         final TologReference ref = _predClause.ref;
@@ -87,7 +91,7 @@ abstract class AbstractTologParser {
         boolean handled = false;
         if (isIdent && isBuiltinPredicate(name)) {
             _handler.startBuiltinPredicate(name, Hints.EMPTY_HINTS);
-            issueArgumentEvents();
+            issueArgumentEvents(wantIRIEvents(name));
             _handler.endBuiltinPredicate();
             handled = true;
         }
@@ -95,7 +99,7 @@ abstract class AbstractTologParser {
             if (isIdent) {
                 if (_predClause.arguments.length == 2) {
                     if (isRule) {
-                        _handler.startRuleInvocation(name);
+                        _handler.startRuleInvocation(name, Hints.EMPTY_HINTS);
                         issueArgumentEvents();
                         _handler.endRuleInvocation();
                         handled = true;
@@ -109,7 +113,7 @@ abstract class AbstractTologParser {
                     }
                 }
                 else if (isRule) {
-                    _handler.startRuleInvocation(name);
+                    _handler.startRuleInvocation(name, Hints.EMPTY_HINTS);
                     issueArgumentEvents();
                     _handler.endRuleInvocation();
                     handled = true;
@@ -137,8 +141,12 @@ abstract class AbstractTologParser {
     }
 
     private void issueArgumentEvents() throws MQLException {
+        issueArgumentEvents(false);
+    }
+
+    private void issueArgumentEvents(boolean convertStringToIRI) throws MQLException {
         for (int i=0; i<_predClause.arguments.length; i++) {
-            issueEvent(_predClause.arguments[i]);
+            issueEvent(_predClause.arguments[i], convertStringToIRI);
         }
     }
 
@@ -217,7 +225,6 @@ abstract class AbstractTologParser {
     }
 
     public void addDeclarationNamespace(final String prefix, final String iri, final int kind) throws MQLException {
-        System.out.println("Added prefix " + prefix + " <" + iri + ">");
         _declPrefixes.put(prefix, new PrefixBinding(iri, kind));
     }
 

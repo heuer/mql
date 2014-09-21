@@ -25,7 +25,7 @@ final class TologReference extends Ref {
         IID = IRef.ITEM_IDENTIFIER,
         SID = IRef.SUBJECT_IDENTIFIER,
         SLO = IRef.SUBJECT_LOCATOR,
-        IRI = SID,
+        IRI = 1008,
         IDENT = 1000,
         VARIABLE = 1001,
         STRING = 1002,

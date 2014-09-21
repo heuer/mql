@@ -88,9 +88,9 @@ public class LoggingTologHandler extends DelegatingTologHandler {
     }
 
     @Override
-    public void startRuleInvocation(String name) throws MQLException {
+    public void startRuleInvocation(String name, Hints hints) throws MQLException {
         _LOG.info("startRuleInvocation name='{}'", name);
-        super.startRuleInvocation(name);
+        super.startRuleInvocation(name, hints);
     }
 
     @Override

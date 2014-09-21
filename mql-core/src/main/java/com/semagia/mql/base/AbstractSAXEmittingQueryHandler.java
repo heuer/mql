@@ -159,12 +159,12 @@ public abstract class AbstractSAXEmittingQueryHandler implements IQueryHandler {
 
     @Override
     public void ascending(String variable) throws MQLException {
-        emptyElement("asc", "value", variable);
+        emptyElement("asc", "name", variable);
     }
 
     @Override
     public void descending(String variable) throws MQLException {
-        emptyElement("desc", "value", variable);
+        emptyElement("desc", "name", variable);
     }
 
     @Override
@@ -179,7 +179,7 @@ public abstract class AbstractSAXEmittingQueryHandler implements IQueryHandler {
 
     @Override
     public void count(String variable) throws MQLException {
-        emptyElement("count", "value", variable);
+        emptyElement("count", "name", variable);
     }
 
     @Override

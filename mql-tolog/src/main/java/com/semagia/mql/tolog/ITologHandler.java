@@ -41,7 +41,7 @@ public interface ITologHandler extends IQueryHandler {
 
     void endFunctionInvocation() throws MQLException;
 
-    void startRuleInvocation(String name) throws MQLException;
+    void startRuleInvocation(String name, Hints hints) throws MQLException;
 
     void endRuleInvocation() throws MQLException;
 

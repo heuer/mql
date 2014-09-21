@@ -66,11 +66,11 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
         }
         if (hints.getCost() != Hints.UNKNOWN_COSTS) {
             if (constructHints != null) {
-                return new String[][] { {"costs", String.valueOf(hints.getCost())}, 
+                return new String[][] { {"cost", String.valueOf(hints.getCost())}, 
                                         {"hint", constructHints} };
             }
             else {
-                return new String[][] { {"costs", String.valueOf(hints.getCost())} };
+                return new String[][] { {"cost", String.valueOf(hints.getCost())} };
             }
         }
         else if (constructHints != null) {
@@ -119,8 +119,8 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
     }
 
     @Override
-    public void startRuleInvocation(String name) throws MQLException {
-        super.startElement("rule-invocation", "name", name);
+    public void startRuleInvocation(String name, Hints hints) throws MQLException {
+        super.startElement("rule-invocation", translateHintsAndName(name, hints));
     }
 
     @Override
