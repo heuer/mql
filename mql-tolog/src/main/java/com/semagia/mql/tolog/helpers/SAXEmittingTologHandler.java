@@ -344,7 +344,7 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
 
     @Override
     public void identifier(String name) throws MQLException {
-        super.emptyElement("identifier", "name", name);
+        super.emptyElement("identifier", "value", name);
     }
 
 }

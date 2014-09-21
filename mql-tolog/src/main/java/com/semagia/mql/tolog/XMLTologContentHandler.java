@@ -58,7 +58,7 @@ public final class XMLTologContentHandler extends DefaultHandler {
             }
         }
         else if (name.equals("identifier")) {
-            _handler.identifier(attrs.getValue("name"));
+            _handler.identifier(attrs.getValue("value"));
         }
         else if (name.equals("string")) {
             _handler.string(attrs.getValue("value"));
