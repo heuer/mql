@@ -40,9 +40,6 @@ import com.semagia.mql.tolog.TologParser;
 public class TologReader implements XMLReader {
 
     private final SAXEmittingTologHandler _handler;
-    private ErrorHandler _errHandler;
-    private DTDHandler _dtdHandler;
-    private EntityResolver _entityResolver;
 
     public TologReader() {
         _handler = new SAXEmittingTologHandler();
@@ -118,7 +115,7 @@ public class TologReader implements XMLReader {
             // noop.
             return;
         }
-        throw new SAXNotSupportedException("Unsupported feature <" + name + ">, value='" + value + "'");
+        throw new SAXNotRecognizedException("Unsupported feature <" + name + ">, value='" + value + "'");
     }
 
     /* (non-Javadoc)
@@ -136,55 +133,54 @@ public class TologReader implements XMLReader {
     @Override
     public void setProperty(String name, Object value) throws SAXNotRecognizedException,
             SAXNotSupportedException {
-        throw new SAXNotSupportedException();
+        // Support Xalan properties
+        if ("http://xml.org/sax/properties/lexical-handler".equals(name)
+                || "http://xml.org/sax/properties/declaration-handler".equals(name)) {
+            return;
+        }
+        throw new SAXNotRecognizedException("Unsupported property " + name + " value " + value);
     }
 
     /* (non-Javadoc)
      * @see org.xml.sax.XMLReader#setEntityResolver(org.xml.sax.EntityResolver)
      */
     @Override
-    public void setEntityResolver(EntityResolver resolver) {
-        _entityResolver = resolver;
-    }
+    public void setEntityResolver(EntityResolver resolver) { }
 
     /* (non-Javadoc)
      * @see org.xml.sax.XMLReader#getEntityResolver()
      */
     @Override
     public EntityResolver getEntityResolver() {
-        return _entityResolver;
+        return null;
     }
 
     /* (non-Javadoc)
      * @see org.xml.sax.XMLReader#setDTDHandler(org.xml.sax.DTDHandler)
      */
     @Override
-    public void setDTDHandler(DTDHandler handler) {
-        _dtdHandler = handler;
-    }
+    public void setDTDHandler(DTDHandler handler) { }
 
     /* (non-Javadoc)
      * @see org.xml.sax.XMLReader#getDTDHandler()
      */
     @Override
     public DTDHandler getDTDHandler() {
-        return _dtdHandler;
+        return null;
     }
 
     /* (non-Javadoc)
      * @see org.xml.sax.XMLReader#setErrorHandler(org.xml.sax.ErrorHandler)
      */
     @Override
-    public void setErrorHandler(ErrorHandler handler) {
-        _errHandler = handler;
-    }
+    public void setErrorHandler(ErrorHandler handler) { }
 
     /* (non-Javadoc)
      * @see org.xml.sax.XMLReader#getErrorHandler()
      */
     @Override
     public ErrorHandler getErrorHandler() {
-        return _errHandler;
+        return null;
     }
 
 }
