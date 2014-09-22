@@ -1,0 +1,1 @@
+<tolog xmlns="http://psi.semagia.com/tolog-xml/"><select><variable name="PERSON"></variable><where><occurrence-predicate><name><identifier value="date-of-birth"></identifier></name><variable name="PERSON"></variable><string value="1973-12-25"></string></occurrence-predicate></where></select></tolog>

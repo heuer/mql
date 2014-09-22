@@ -1,0 +1,1 @@
+select $type from direct-instance-of($i, $type)?

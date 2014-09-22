@@ -1,0 +1,1 @@
+select $o frOm occurrence($t, $o), reifies(r, $o)?
