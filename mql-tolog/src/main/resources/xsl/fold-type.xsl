@@ -3,8 +3,7 @@
   Merges role-player($x, x), type($x, z) into role-player($x, x, z) and
   occurrence(t, $x), type($x, z) into occurrence(t, $x, z)
   and topic-name(t, $x), type($x, z) into topic-name(t, $x, z)
-
-  TODO: association($a), type($a, t) into association($a, t)
+  and association($a), type($a, t) into association($a, t)
 
   
   Copyright (c) 2010 - 2014, Semagia - Lars Heuer <http://www.semagia.com/>
@@ -29,6 +28,10 @@
             match="tl:builtin-predicate[@name='role-player'][tl:*[1][local-name(.) = 'variable']][tl:*[2][local-name(.) != 'variable']]"
             use="tl:*[1]/@name"/>
 
+  <xsl:key name="assoc" 
+            match="tl:builtin-predicate[@name='association'][tl:*[1][local-name(.) = 'variable']]"
+            use="tl:*[1]/@name"/>
+
   <xsl:key name="type" 
             match="tl:builtin-predicate[@name='type'][tl:*[1][local-name(.) = 'variable']][tl:*[2][local-name(.) != 'variable']]"
             use="tl:*[1]/@name"/>
@@ -44,6 +47,11 @@
     <xsl:call-template name="enhance"><xsl:with-param name="types" select="key('type', tl:*[1]/@name)[generate-id(..)=$parent]"/></xsl:call-template>
   </xsl:template>
 
+  <xsl:template match="tl:builtin-predicate[@name='association'][tl:*[1][local-name(.)='variable']]">
+    <xsl:variable name="parent" select="generate-id(..)"/>
+    <xsl:call-template name="enhance"><xsl:with-param name="types" select="key('type', tl:*[1]/@name)[generate-id(..)=$parent]"/></xsl:call-template>
+  </xsl:template>
+
   <xsl:template match="tl:builtin-predicate[@name='topic-name'
                                             or @name='occurrence'][tl:*[1][local-name(.)!='variable']][tl:*[2][local-name(.) = 'variable']]">
     <xsl:variable name="parent" select="generate-id(..)"/>
@@ -52,7 +60,9 @@
 
   <xsl:template match="tl:builtin-predicate[@name='type'][tl:*[1][local-name(.) = 'variable']][tl:*[2][local-name(.) != 'variable']]">
     <xsl:variable name="parent" select="generate-id(..)"/>
-    <xsl:if test="count(key('role-player', tl:*[1]/@name)[generate-id(..)=$parent]|key('stmts', tl:*[1]/@name)[generate-id(..)=$parent]) = 0">
+    <xsl:if test="count(key('role-player', tl:*[1]/@name)[generate-id(..)=$parent]
+                        |key('stmts', tl:*[1]/@name)[generate-id(..)=$parent]
+                        |key('assoc', tl:*[1]/@name)[generate-id(..)=$parent]) = 0">
         <xsl:copy-of select="."/>
     </xsl:if>
   </xsl:template>
