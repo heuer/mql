@@ -52,7 +52,7 @@
 
   <xsl:template match="tl:builtin-predicate[@name='type'][tl:*[1][local-name(.) = 'variable']][tl:*[2][local-name(.) != 'variable']]">
     <xsl:variable name="parent" select="generate-id(..)"/>
-    <xsl:if test="count(key('role-player', tl:*[1]/@name)[generate-id(..)=$parent]|key('stmts', tl:*[1]/@name)[generate-id(..)=$parent]) != 1">
+    <xsl:if test="count(key('role-player', tl:*[1]/@name)[generate-id(..)=$parent]|key('stmts', tl:*[1]/@name)[generate-id(..)=$parent]) = 0">
         <xsl:copy-of select="."/>
     </xsl:if>
   </xsl:template>
@@ -61,11 +61,11 @@
     <xsl:param name="types"/>
     <xsl:choose>
       <xsl:when test="count($types)=1">
-        <builtin-predicate>
+        <internal-predicate>
           <xsl:copy-of select="@*"/>
           <xsl:copy-of select="*"/>
-          <xsl:copy-of select="$types/tl:*[2]"/>
-        </builtin-predicate>
+          <type><xsl:copy-of select="$types/tl:*[2]"/></type>
+        </internal-predicate>
       </xsl:when> 
       <xsl:otherwise>
         <xsl:copy-of select="."/>
