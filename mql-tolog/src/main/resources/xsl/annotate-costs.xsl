@@ -20,7 +20,7 @@
 
   <xsl:output method="xml" encoding="utf-8" standalone="yes"/>
 
-  <xsl:variable name="INFINITE_RESULT" select="10000"/>
+  <xsl:variable name="INFINITE_RESULT" select="1000000"/>
   <xsl:variable name="WHOLE_TM_RESULT" select="1000"/>
   <xsl:variable name="BIG_RESULT"      select="100"/>
   <xsl:variable name="MEDIUM_RESULT"   select="10"/>
@@ -36,6 +36,10 @@
   <xsl:key name="namespaces"
              match="tl:namespace[@kind='module']"
              use="@identifier"/>
+
+  <xsl:key name="bound-vars"
+             match="tl:where/tl:*[local-name(.) != 'or' and local-name(.) != 'not']/tl:variable"
+             use="@name"/>
 
 
   <xsl:template match="@*|node()">
@@ -310,7 +314,7 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-    
+
   <!--
         Module: Experimental
   -->
