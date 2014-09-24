@@ -89,7 +89,7 @@ public class LoggingTologHandler extends DelegatingTologHandler {
 
     @Override
     public void startRuleInvocation(String name, Hints hints) throws MQLException {
-        _LOG.info("startRuleInvocation name='{}'", name);
+        _LOG.info("startRuleInvocation name='{}', hints='{}'", name, hints);
         super.startRuleInvocation(name, hints);
     }
 
@@ -112,9 +112,9 @@ public class LoggingTologHandler extends DelegatingTologHandler {
     }
 
     @Override
-    public void startAssociationPredicate(Hints options) throws MQLException {
-        _LOG.info("startAssociationPredicate");
-        super.startAssociationPredicate(options);
+    public void startAssociationPredicate(Hints hints) throws MQLException {
+        _LOG.info("startAssociationPredicate, hints='{}'", hints);
+        super.startAssociationPredicate(hints);
     }
 
     @Override
@@ -130,9 +130,9 @@ public class LoggingTologHandler extends DelegatingTologHandler {
     }
 
     @Override
-    public void startBuiltinPredicate(String name, Hints options) throws MQLException {
-        _LOG.info("startBuiltinPredicate, name='{}'", name);
-        super.startBuiltinPredicate(name, options);
+    public void startBuiltinPredicate(String name, Hints hints) throws MQLException {
+        _LOG.info("startBuiltinPredicate, name='{}', hints='{}'", name, hints);
+        super.startBuiltinPredicate(name, hints);
     }
 
     @Override
@@ -149,7 +149,7 @@ public class LoggingTologHandler extends DelegatingTologHandler {
 
     @Override
     public void startRule(String name, String[] variables) throws MQLException {
-        StringBuilder buff = new StringBuilder();
+        final StringBuilder buff = new StringBuilder();
         for (String var: variables) {
             buff.append("'" + var + "', ");
         }
@@ -170,9 +170,9 @@ public class LoggingTologHandler extends DelegatingTologHandler {
     }
 
     @Override
-    public void startInfixPredicate(String name, Hints options) throws MQLException {
-        _LOG.info("startInfixPredicate name='{}'", name);
-        super.startInfixPredicate(name, options);
+    public void startInfixPredicate(String name, Hints hints) throws MQLException {
+        _LOG.info("startInfixPredicate name='{}', hints='{}'", name, hints);
+        super.startInfixPredicate(name, hints);
     }
 
     @Override
@@ -237,9 +237,9 @@ public class LoggingTologHandler extends DelegatingTologHandler {
     }
 
     @Override
-    public void startOccurrencePredicate(Hints options) throws MQLException {
-        _LOG.info("startOccurrencePredicate");
-        super.startOccurrencePredicate(options);
+    public void startOccurrencePredicate(Hints hints) throws MQLException {
+        _LOG.info("startOccurrencePredicate, hints='{}'", hints);
+        super.startOccurrencePredicate(hints);
     }
 
     @Override
@@ -255,9 +255,9 @@ public class LoggingTologHandler extends DelegatingTologHandler {
     }
 
     @Override
-    public void startPredicate(Hints options) throws MQLException {
-        _LOG.info("startPredicate");
-        super.startPredicate(options);
+    public void startPredicate(Hints hints) throws MQLException {
+        _LOG.info("startPredicate, hints='{}'", hints);
+        super.startPredicate(hints);
     }
 
     @Override
@@ -268,7 +268,7 @@ public class LoggingTologHandler extends DelegatingTologHandler {
 
     @Override
     public void startInternalPredicate(String name, String[] removedVariables, Hints hints) throws MQLException {
-        _LOG.info("startInternalPredicate, name='{}', removed='{}'", name, removedVariables);
+        _LOG.info("startInternalPredicate, name='{}', removed='{}', hints='{}'", name, removedVariables, hints);
         super.startInternalPredicate(name, removedVariables, hints);
     }
 

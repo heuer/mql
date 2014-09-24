@@ -19,6 +19,7 @@ import org.xml.sax.ContentHandler;
 
 import com.semagia.mql.MQLException;
 import com.semagia.mql.base.AbstractSAXEmittingQueryHandler;
+import com.semagia.mql.tolog.Hints.ConstructType;
 import com.semagia.mql.tolog.ITologHandler;
 import com.semagia.mql.tolog.Hints;
 
@@ -44,7 +45,7 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
     }
 
     private static String[][] translateHints(Hints hints) {
-        final int[] constructs = hints.getConstructs();
+        final ConstructType[] constructs = hints.getConstructs();
         String constructHints = null;
         if (constructs.length != 0) {
             StringBuilder buff = new StringBuilder();
@@ -52,15 +53,7 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
                 if (i > 0) {
                     buff.append(' ');
                 }
-                switch (constructs[i]) {
-                    case Hints.ASSOCIATION: buff.append("association"); break;
-                    case Hints.OCCURRENCE: buff.append("occurrence"); break;
-                    case Hints.NAME: buff.append("name"); break;
-                    case Hints.TOPIC: buff.append("topic"); break;
-                    case Hints.VARIANT: buff.append("variant"); break;
-                    case Hints.ROLE: buff.append("role"); break;
-                    case Hints.TOPICMAP: buff.append("topicmap"); break;
-                }
+                buff.append(constructs[i]);
             }
             constructHints = buff.toString();
         }

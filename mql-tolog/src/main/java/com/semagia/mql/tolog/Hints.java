@@ -21,20 +21,39 @@ package com.semagia.mql.tolog;
  */
 public class Hints {
 
-    public static final int
-        TOPICMAP = 1,
-        TOPIC = 2,
-        ASSOCIATION = 3,
-        ROLE = 4,
-        OCCURRENCE = 5,
-        NAME = 6,
-        VARIANT = 7;
+    public static enum ConstructType {
+        TOPICMAP,
+        TOPIC,
+        ASSOCIATION,
+        ROLE,
+        OCCURRENCE,
+        NAME,
+        VARIANT;
+
+        @Override
+        public String toString() {
+            switch (this) {
+                case TOPICMAP: return "topicmap";
+                case TOPIC: return "topic";
+                case ASSOCIATION: return "association";
+                case ROLE: return "role";
+                case OCCURRENCE: return "occurrence";
+                case NAME: return "name";
+                case VARIANT: return "variant";
+            }
+            throw new RuntimeException("Internal error");
+        }
+        
+        public static ConstructType fromString(final String name) {
+            return valueOf(name.toUpperCase());
+        }
+    }
 
     public static final int UNKNOWN_COSTS = -1; 
 
-    static int[] EMPTY_CONSTRUCTS = new int[0];
+    static ConstructType[] EMPTY_CONSTRUCTS = new ConstructType[0];
     private final int _costs;
-    private final int[] _constructs;
+    private final ConstructType[] _constructs;
 
     static Hints EMPTY_HINTS = new Hints();
 
@@ -46,11 +65,11 @@ public class Hints {
         this(costs, EMPTY_CONSTRUCTS);
     }
 
-    Hints(int[] constructs) {
+    Hints(ConstructType[] constructs) {
         this(UNKNOWN_COSTS, constructs);
     }
 
-    Hints(int costs, int[] constructs) {
+    Hints(int costs, ConstructType[] constructs) {
         _costs = costs;
         _constructs = constructs;
     }
@@ -59,8 +78,31 @@ public class Hints {
         return _costs;
     }
 
-    public int[] getConstructs() {
+    public ConstructType[] getConstructs() {
         return _constructs;
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder buff = new StringBuilder("cost='");
+        if (_costs == -1) {
+            buff.append("unknown");
+        }
+        else {
+            buff.append(_costs);
+        }
+        buff.append("' hint='");
+        if (_constructs.length < 1) {
+            buff.append('-');
+        }
+        else {
+            for (int i=0; i<_constructs.length; i++) {
+                if (i > 0) {
+                    buff.append(' ');
+                }
+                buff.append(_constructs[i].toString());
+            }
+        }
+        return buff.append('\'').toString();
+    }
 }

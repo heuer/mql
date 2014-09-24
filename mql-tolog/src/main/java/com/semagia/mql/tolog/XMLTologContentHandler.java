@@ -23,6 +23,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.semagia.mql.MQLException;
+import com.semagia.mql.tolog.Hints.ConstructType;
 
 /**
  * {@link ContentHandler} which translates XML into {@link ITologHandler} events.
@@ -333,35 +334,10 @@ public final class XMLTologContentHandler extends DefaultHandler {
         final String costs = attrs.getValue("cost");
         final String hints = attrs.getValue("hint");
         if (hints != null) {
-            String[] tmp = hints.split(" ");
-            int[] constructs = new int[tmp.length];
-            int c;
+            final String[] tmp = hints.split(" ");
+            final ConstructType[] constructs = new ConstructType[tmp.length];
             for (int i=0; i<tmp.length; i++) {
-                if (tmp[i].equals("association")) {
-                    c = Hints.ASSOCIATION;
-                }
-                else if (tmp[i].equals("occurrence")) {
-                    c = Hints.OCCURRENCE;
-                }
-                else if (tmp[i].equals("name")) {
-                    c = Hints.NAME;
-                }
-                else if (tmp[i].equals("topic")) {
-                    c = Hints.TOPIC;
-                }
-                else if (tmp[i].equals("role")) {
-                    c = Hints.ROLE;
-                }
-                else if (tmp[i].equals("variant")) {
-                    c = Hints.VARIANT;
-                }
-                else if (tmp[i].equals("topicmap")) {
-                    c = Hints.TOPICMAP;
-                }
-                else {
-                    throw new MQLException("Internal error");  //TODO
-                }
-                constructs[i] = c;
+                constructs[i] = ConstructType.fromString(tmp[i]);
             }
             return new Hints(costs != null ? Integer.parseInt(costs) : Hints.UNKNOWN_COSTS, constructs);
         }
