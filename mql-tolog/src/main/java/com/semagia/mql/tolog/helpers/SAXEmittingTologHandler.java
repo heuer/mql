@@ -45,7 +45,7 @@ public class SAXEmittingTologHandler extends AbstractSAXEmittingQueryHandler imp
     }
 
     private static String[][] translateHints(Hints hints) {
-        final ConstructType[] constructs = hints.getConstructs();
+        final ConstructType[] constructs = hints.getConstructTypes();
         String constructHints = null;
         if (constructs.length != 0) {
             StringBuilder buff = new StringBuilder();

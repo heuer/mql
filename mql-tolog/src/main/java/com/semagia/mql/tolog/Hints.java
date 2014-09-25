@@ -16,6 +16,7 @@
 package com.semagia.mql.tolog;
 
 /**
+ * This class holds hints for predicates/rule invocations etc.
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
@@ -44,41 +45,57 @@ public class Hints {
             throw new RuntimeException("Internal error");
         }
 
-        public static ConstructType fromString(final String name) {
+        /**
+         * Helper method to create a ConstructType from lower-cased
+         * strings.
+         *  
+         * @param name A (maybe) lower-cased name of a construct type.
+         * @return A ConstructType.
+         */
+        static ConstructType fromString(final String name) {
             return valueOf(name.toUpperCase());
         }
     }
 
     public static final int UNKNOWN_COSTS = -1; 
 
-    static ConstructType[] EMPTY_CONSTRUCTS = new ConstructType[0];
+    private static final ConstructType[] EMPTY_CONSTRUCTS = new ConstructType[0];
     private final int _costs;
     private final ConstructType[] _constructs;
 
-    static Hints EMPTY_HINTS = new Hints();
+    static final Hints EMPTY_HINTS = new Hints();
 
-    Hints() {
+    private Hints() {
         this(UNKNOWN_COSTS, EMPTY_CONSTRUCTS);
     }
 
-    Hints(int costs) {
+    Hints(final int costs) {
         this(costs, EMPTY_CONSTRUCTS);
     }
 
-    Hints(ConstructType[] constructs) {
-        this(UNKNOWN_COSTS, constructs);
-    }
-
-    Hints(int costs, ConstructType[] constructs) {
+    Hints(final int costs, final ConstructType[] constructs) {
+        if (constructs == null) {
+            throw new IllegalArgumentException("The construct types must not be null");
+        }
         _costs = costs;
         _constructs = constructs;
     }
 
+    /**
+     * Returns the estimated cost.
+     * 
+     * @return The estimated cost or {@link UNKNOWN_COST}.
+     */
     public int getCost() {
         return _costs;
     }
 
-    public ConstructType[] getConstructs() {
+    /**
+     * Returns the construct type hints.
+     * 
+     * @return A (maybe empty) array of {@link ConstructType}, never {@code null}.
+     */
+    public ConstructType[] getConstructTypes() {
         return _constructs;
     }
 
