@@ -43,7 +43,7 @@ public class Hints {
             }
             throw new RuntimeException("Internal error");
         }
-        
+
         public static ConstructType fromString(final String name) {
             return valueOf(name.toUpperCase());
         }

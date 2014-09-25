@@ -238,14 +238,14 @@
   <xsl:template match="tl:infix-predicate[@name='eq'][count(tl:variable)=0]">
     <!--** Matches the equals (=) predicate where all variables are bound -->
     <xsl:call-template name="annotate">
-      <xsl:with-param name="cost" select="$SINGLE_RESULT"/>
+      <xsl:with-param name="cost" select="$FILTER_RESULT"/>
     </xsl:call-template>
   </xsl:template>
 
   <xsl:template match="tl:infix-predicate[@name='eq'][count(tl:variable)=1]">
     <!--** Matches the equals (=) predicate where one variable is bound -->
     <xsl:call-template name="annotate">
-      <xsl:with-param name="cost" select="$FILTER_RESULT"/>
+      <xsl:with-param name="cost" select="$SINGLE_RESULT"/>
     </xsl:call-template>
   </xsl:template>
 
