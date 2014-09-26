@@ -37,11 +37,6 @@
              match="tl:namespace[@kind='module']"
              use="@identifier"/>
 
-  <xsl:key name="bound-vars"
-             match="tl:where/tl:*[local-name(.) != 'or' and local-name(.) != 'not']/tl:variable"
-             use="@name"/>
-
-
   <xsl:template match="@*|node()">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
@@ -179,7 +174,7 @@
     <!--** Matches those (binary) built-in predicates where the first part is unbound and the 
            second part is bound and which produce a medium result.
 
-           * role-player
+           * role-player($ROLE, TOPIC)
      -->
     <xsl:call-template name="annotate">
       <xsl:with-param name="cost" select="$MEDIUM_RESULT"/>
@@ -196,8 +191,8 @@
     <!--** Matches those (binary) built-in predicates where the first part is unbound and the 
            second part is bound and which produce a big result.
 
-           * type
-           * instance-of
+           * type($TYPED, TYPE)
+           * instance-of()
            * direct-instance-of
            * scope
            * datatype
@@ -217,8 +212,8 @@
     <!--** Matches those (binary) built-in predicates where the first part is bound and the 
            second part is unbound and which produce a single result.
 
-           * role-player
-           * type
+           * role-player(ROLE, $TOPIC)
+           * type(TYPED, $TYPE)
            * reifies
            * object-id
            * datatype

@@ -42,7 +42,7 @@ public class Hints {
                 case NAME: return "name";
                 case VARIANT: return "variant";
             }
-            throw new RuntimeException("Internal error");
+            throw new IllegalArgumentException("Internal error");
         }
 
         /**
