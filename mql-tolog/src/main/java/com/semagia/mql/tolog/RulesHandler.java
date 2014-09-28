@@ -228,6 +228,9 @@ final class RulesHandler implements ITologHandler {
 
     @Override
     public void startRule(String name, String[] variables) throws MQLException {
+        if (_ruleNames.contains(name)) {
+            throw new MQLException("The rule '" + name + "' is already defined");
+        }
         final String[] arr = new String[variables.length+1];
         arr[0] = name;
         System.arraycopy(variables, 0, arr, 1, variables.length);
